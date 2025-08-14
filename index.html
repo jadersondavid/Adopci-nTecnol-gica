@@ -1,0 +1,4284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- =====================  METADATOS BÁSICOS  ===================== -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Transformación Digital - Laboratorios Laproff</title>
+  <meta name="theme-color" content="#0891b2" />
+
+  <!-- =====================  FUENTE  ===================== -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+  <!-- =====================  CHARTS (CDN)  ===================== -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+
+  <!-- =====================  ESTILOS GLOBALES  ===================== -->
+  <style>
+    @tailwind components;
+    @tailwind utilities;
+
+    /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+    All colors MUST be HSL.
+    */
+
+    @layer base {
+      :root {
+        /* Corporativos oficiales */
+        --laproff-principal: #0097A6;
+        --laproff-alternativo-oficial: #AFDBDE;
+        --laproff-alternativo-azul: #353591;
+        
+        /* Corporativos oficiales de resalto */
+        --laproff-alt-gris: #A8A9AD;
+        --laproff-alt-amarillo: #FFE627;
+        --laproff-alt-verde: #9ECB3A;
+        
+        /* Corporativos oficiales Complementarios */
+        --laproff-comp-azul: #00B7EE;
+        --laproff-comp-violeta: #806CB0;
+        --laproff-comp-naranja: #FCB547;
+        --laproff-comp-coral: #F16688;
+
+        /* Design System Variables */
+        --background: #f8f9fa;
+        --foreground: #1a202c;
+        --card: #ffffff;
+        --card-foreground: #1a202c;
+        --popover: #ffffff;
+        --popover-foreground: #1a202c;
+
+        /* Primary: Laproff Principal */
+        --primary: var(--laproff-principal);
+        --primary-foreground: 210 25% 5%;
+        --primary-glow: var(--laproff-comp-azul);
+
+        /* Secondary: Laproff Alternativo Azul */
+        --secondary: var(--laproff-alternativo-azul);
+        --secondary-foreground: 210 25% 5%;
+
+        /* Accent: Laproff Alternativo Oficial */
+        --accent: var(--laproff-alternativo-oficial);
+        --accent-foreground: 210 25% 5%;
+
+        --muted: 225 30% 20%;
+        --muted-foreground: 210 20% 65%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 210 40% 98%;
+        --border: 225 25% 25%;
+        --input: 225 25% 25%;
+        --ring: var(--laproff-principal);
+
+        /* Success states */
+        --success: var(--laproff-alt-verde);
+        --success-foreground: 210 40% 98%;
+
+        /* Warning states */
+        --warning: var(--laproff-alt-amarillo);
+        --warning-foreground: 225 40% 8%;
+
+        /* Gradients with Laproff Colors */
+        --gradient-primary: linear-gradient(135deg, var(--laproff-principal), var(--laproff-comp-azul));
+        --gradient-secondary: linear-gradient(135deg, var(--laproff-alternativo-azul), var(--laproff-alternativo-oficial));
+        --gradient-accent: linear-gradient(135deg, var(--laproff-alternativo-oficial), var(--laproff-principal));
+        --gradient-neural: linear-gradient(135deg, #f8f9fa, var(--laproff-alternativo-oficial), var(--laproff-principal));
+
+        /* Shadows with Laproff Colors */
+        --shadow-glow: 0 0 40px var(--laproff-principal / 0.4);
+        --shadow-neural: 0 10px 30px -10px var(--laproff-alternativo-azul / 0.5);
+        --shadow-card: 0 8px 25px -8px rgba(0, 0, 0, 0.1);
+
+        /* Animations */
+        --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        --radius: 0.5rem;
+
+        /* Safety areas */
+        --safety-area-top: env(safe-area-inset-top, 0px);
+        --safety-area-bottom: env(safe-area-inset-bottom, 24px);
+        --safety-area-left: env(safe-area-inset-left, 0px);
+        --safety-area-right: env(safe-area-inset-right, 0px);
+        --controls-bg: rgba(0, 0, 0, 0.5);
+        --controls-radius: 32px;
+        --primary-color: var(--mud-palette-primary);
+        --accent-color: var(--mud-palette-secondary);
+
+        --sidebar-background: 0 0% 98%;
+        --sidebar-foreground: 240 5.3% 26.1%;
+        --sidebar-primary: 240 5.9% 10%;
+        --sidebar-primary-foreground: 0 0% 98%;
+        --sidebar-accent: 240 4.8% 95.9%;
+        --sidebar-accent-foreground: 240 5.9% 10%;
+        --sidebar-border: 220 13% 91%;
+        --sidebar-ring: 217.2 91.2% 59.8%;
+      }
+
+      .dark {
+        /* Dark mode uses same Laproff colors */
+        --background: #e9ecef;
+        --foreground: #2d3748;
+        --card: #ffffff;
+        --card-foreground: #2d3748;
+        --popover: #ffffff;
+        --popover-foreground: #2d3748;
+        --primary: var(--laproff-principal);
+        --primary-foreground: 210 40% 98%;
+        --secondary: var(--laproff-alternativo-azul);
+        --secondary-foreground: 225 40% 8%;
+        --accent: var(--laproff-comp-naranja);
+        --accent-foreground: 225 40% 8%;
+        --muted: 225 30% 20%;
+        --muted-foreground: 210 20% 65%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 210 40% 98%;
+        --border: 225 25% 25%;
+        --input: 225 25% 25%;
+        --ring: var(--laproff-principal);
+      }
+
+      /* Custom CSS Classes */
+      .neural-bg {
+        background: var(--gradient-neural);
+      }
+
+      .glow-effect {
+        box-shadow: var(--shadow-glow);
+      }
+
+      .neural-shadow {
+        box-shadow: var(--shadow-neural);
+      }
+
+      .card-shadow {
+        box-shadow: var(--shadow-card);
+      }
+
+      .pulse-glow {
+        animation: pulse-glow 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes pulse-glow {
+        from { box-shadow: 0 0 20px var(--laproff-principal / 0.3); }
+        to { box-shadow: 0 0 40px var(--laproff-principal / 0.8); }
+      }
+
+      .neural-grid {
+        background-image: 
+          linear-gradient(90deg, var(--laproff-alt-gris) / 0.3 1px, transparent 1px),
+          linear-gradient(var(--laproff-alt-gris) / 0.3 1px, transparent 1px);
+        background-size: 50px 50px;
+      }
+
+      .typing-animation {
+        overflow: hidden;
+        border-right: 2px solid var(--laproff-principal);
+        white-space: nowrap;
+        animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+      }
+
+      @keyframes typing {
+        from { width: 0; }
+        to { width: 100%; }
+      }
+
+      @keyframes blink-caret {
+        from, to { border-color: transparent; }
+        50% { border-color: var(--laproff-principal); }
+      }
+
+      @keyframes neural-pulse {
+        0%, 100% { opacity: 0.6; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.05); }
+      }
+
+      .animate-neural-pulse {
+        animation: neural-pulse 2s ease-in-out infinite;
+      }
+    }
+
+    @layer base {
+      * {
+        @apply border-border;
+      }
+
+      body {
+        @apply bg-background text-foreground;
+      }
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      line-height:1.6;
+      color: var(--foreground);
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 15%, #e9ecef 50%, #f1f3f4 85%, #ffffff 100%);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+    .container{max-width:1200px;margin:0 auto;padding:0 20px}
+
+    /* =====================  HEADER  ===================== */
+    .header{
+      background: var(--gradient-primary);
+      color: hsl(var(--primary-foreground)); 
+      padding:56px 0; 
+      position:relative; 
+      overflow:hidden;
+    }
+    .header::before{
+      content:""; 
+      position:absolute; 
+      inset:-40%; 
+      background:radial-gradient(circle,rgba(255,255,255,.14) 0%, transparent 60%);
+      animation:pulse 6s ease-in-out infinite; 
+      z-index:0;
+    }
+    .header::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 30px 30px;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .header-content{
+      position:relative; 
+      z-index:2; 
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+    }
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .main-title-section {
+      flex: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .logo-svg{
+      width:128px;
+      height:128px;
+      display:block;
+      filter:drop-shadow(0 6px 14px rgba(0,0,0,.25));
+      transition: var(--transition-smooth);
+    }
+    .logo-svg:hover {
+      transform: scale(1.05);
+      filter: drop-shadow(0 8px 20px rgba(0,0,0,.35));
+    }
+    .logo-title{
+      font-weight:800;
+      font-size:2.4rem;
+      letter-spacing:.2px;
+      margin: 0;
+    }
+    .tagline{
+      opacity:.95; 
+      font-size:1.05rem;
+      margin: 0;
+    }
+    .subtitle{
+      font-size:2.2rem; 
+      font-weight:800; 
+      color: hsl(var(--accent));
+      text-align: center;
+      margin: 0;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      letter-spacing: 0.5px;
+      line-height: 1.2;
+    }
+    .prototype-logo {
+      width: 128px;
+      height: 128px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: var(--transition-smooth);
+    }
+    .prototype-logo:hover {
+      transform: scale(1.05);
+      background: rgba(255,255,255,0.15);
+    }
+          .prototype-logo img {
+        width: 96px;
+        height: 96px;
+        object-fit: contain;
+      }
+
+      /* Responsive styles for header */
+      @media (max-width: 768px) {
+        .header-content {
+          flex-direction: column;
+          gap: 16px;
+          text-align: center;
+        }
+        .logo-section {
+          flex: none;
+          justify-content: center;
+        }
+        .main-title-section {
+          flex: none;
+          order: -1;
+        }
+        .subtitle {
+          font-size: 1.3rem;
+        }
+        .logo-title {
+          font-size: 1.6rem;
+        }
+        .logo-svg {
+          width: 80px;
+          height: 80px;
+        }
+        .prototype-logo {
+          width: 80px;
+          height: 80px;
+        }
+        .prototype-logo img {
+          width: 60px;
+          height: 60px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .subtitle {
+          font-size: 1.1rem;
+        }
+        .logo-title {
+          font-size: 1.4rem;
+        }
+        .tagline {
+          font-size: 0.9rem;
+        }
+      }
+
+    /* =====================  SECCIÓN PILARES  ===================== */
+    .pillars-section{
+      padding:80px 0; 
+      background: hsl(var(--card)); 
+      margin:-28px 20px 50px; 
+      border-radius:var(--radius);
+      box-shadow: var(--shadow-card);
+    }
+    .section-title{
+      text-align:center; 
+      font-size:2.2rem; 
+      font-weight:800; 
+      color: hsl(var(--primary));
+      margin-bottom:46px; 
+      position:relative; 
+      letter-spacing:.3px;
+    }
+    .section-title::after{
+      content:""; 
+      position:absolute; 
+      left:50%; 
+      transform:translateX(-50%);
+      bottom:-12px; 
+      width:90px; 
+      height:4px; 
+      border-radius:2px;
+      background: var(--gradient-primary);
+    }
+    .pillars-grid{
+      display:grid; 
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); 
+      gap:22px;
+      padding:0 8px;
+    }
+    .pillar-card{
+      background: hsl(var(--card)); 
+      padding:32px; 
+      border-radius:20px;
+      border:2px solid hsl(var(--border)); 
+      position:relative; 
+      overflow:hidden; 
+      cursor:pointer;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: pillar-float-advanced 5s ease-in-out infinite;
+      box-shadow: 
+        0 8px 25px hsl(var(--primary) / 0.1),
+        0 0 0 0 hsl(var(--primary) / 0.3);
+    }
+    .pillar-card:hover{ 
+      transform:translateY(-8px) scale(1.05) rotate(1deg); 
+      box-shadow: 
+        var(--shadow-neural), 
+        0 15px 35px var(--laproff-principal / 0.3),
+        0 0 0 8px hsl(var(--primary) / 0.1); 
+      border-color: hsl(var(--primary));
+      animation-play-state: paused;
+      background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--card) / 0.95));
+    }
+    .pillar-card.active{ 
+      outline:3px solid hsl(var(--primary)); 
+      box-shadow: 
+        var(--shadow-glow), 
+        0 0 40px var(--laproff-principal / 0.4),
+        0 0 0 12px hsl(var(--primary) / 0.15);
+      animation: pillar-active-advanced 2.5s ease-in-out infinite;
+      background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--primary) / 0.05));
+    }
+
+    @keyframes pillar-float-advanced {
+      0%, 100% { 
+        transform: translateY(0px) rotate(0deg); 
+        box-shadow: 
+          0 8px 25px hsl(var(--primary) / 0.1),
+          0 0 0 0 hsl(var(--primary) / 0.3);
+      }
+      25% { 
+        transform: translateY(-3px) rotate(0.5deg); 
+        box-shadow: 
+          0 10px 30px hsl(var(--primary) / 0.15),
+          0 0 0 2px hsl(var(--primary) / 0.2);
+      }
+      50% { 
+        transform: translateY(-5px) rotate(0deg); 
+        box-shadow: 
+          0 12px 35px hsl(var(--primary) / 0.2),
+          0 0 0 4px hsl(var(--primary) / 0.25);
+      }
+      75% { 
+        transform: translateY(-3px) rotate(-0.5deg); 
+        box-shadow: 
+          0 10px 30px hsl(var(--primary) / 0.15),
+          0 0 0 2px hsl(var(--primary) / 0.2);
+      }
+    }
+
+    @keyframes pillar-active-advanced {
+      0%, 100% { 
+        transform: translateY(-8px) scale(1.05) rotate(1deg); 
+        box-shadow: 
+          var(--shadow-glow), 
+          0 0 40px var(--laproff-principal / 0.4),
+          0 0 0 12px hsl(var(--primary) / 0.15);
+      }
+      50% { 
+        transform: translateY(-12px) scale(1.08) rotate(0deg); 
+        box-shadow: 
+          var(--shadow-glow), 
+          0 0 50px var(--laproff-principal / 0.6),
+          0 0 0 16px hsl(var(--primary) / 0.25);
+      }
+    }
+    .pillar-card::before{
+      content:""; 
+      position:absolute; 
+      inset:0 0 auto 0; 
+      height:4px;
+      background: var(--gradient-primary);
+    }
+    .pillar-card::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+              background-image: 
+          linear-gradient(90deg, var(--laproff-alt-gris) / 0.05 1px, transparent 1px),
+          linear-gradient(var(--laproff-alt-gris) / 0.05 1px, transparent 1px);
+      background-size: 20px 20px;
+      pointer-events: none;
+      opacity: 0;
+      transition: var(--transition-smooth);
+    }
+    .pillar-card:hover::after {
+      opacity: 1;
+    }
+    .pillar-icon{
+      width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+      background: var(--gradient-primary); 
+      color: hsl(var(--primary-foreground)); 
+      font-size:1.3rem; 
+      margin-bottom:12px;
+      box-shadow: var(--shadow-glow);
+      transition: var(--transition-smooth);
+    }
+    .pillar-card:hover .pillar-icon {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: var(--shadow-glow), 0 0 20px hsl(var(--primary) / 0.3);
+    }
+    .pillar-title{font-size:1.15rem;font-weight:700;color: hsl(var(--primary));margin-bottom:8px}
+    .pillar-description{color: hsl(var(--muted-foreground))}
+    
+    /* Panel desplegable para proyectos tecnológicos */
+    .tech-projects-panel {
+      grid-column: 1 / -1;
+      background: hsl(var(--card) / 0.95);
+      border: 1px solid hsl(var(--primary) / 0.3);
+      border-radius: 18px;
+      padding: 0;
+      margin-top: 22px;
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow-neural);
+    }
+    .tech-projects-panel.active {
+      max-height: 2000px;
+      opacity: 1;
+      transform: translateY(0);
+      padding: 32px;
+    }
+    .tech-projects-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid hsl(var(--border) / 0.5);
+    }
+    .tech-projects-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: hsl(var(--primary));
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tech-projects-subtitle {
+      color: hsl(var(--muted-foreground));
+      font-size: 0.95rem;
+      margin-left: 4px;
+    }
+    .tech-projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .tech-project-item {
+      background: hsl(var(--muted) / 0.05);
+      border: 1px solid hsl(var(--border) / 0.3);
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition-smooth);
+      cursor: pointer;
+    }
+    .tech-project-item:hover {
+      transform: translateY(-2px);
+      border-color: hsl(var(--primary) / 0.5);
+      box-shadow: var(--shadow-card);
+      background: hsl(var(--muted) / 0.08);
+    }
+    .tech-project-item::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-primary);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+    .tech-project-item:hover::before {
+      transform: scaleX(1);
+    }
+    .tech-project-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .tech-project-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gradient-primary);
+      color: hsl(var(--primary-foreground));
+      font-size: 1.1rem;
+      box-shadow: 0 4px 12px hsl(var(--primary) / 0.3);
+    }
+    .tech-project-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: hsl(var(--primary));
+      margin: 0;
+    }
+    .tech-project-description {
+      color: hsl(var(--muted-foreground));
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+    .tech-project-impact {
+      background: hsl(var(--primary) / 0.08);
+      border-left: 3px solid hsl(var(--primary));
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      color: hsl(var(--primary));
+      font-weight: 600;
+    }
+    .tech-project-status {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: hsl(var(--success));
+      box-shadow: 0 0 0 0 hsl(var(--success) / 0.7);
+      animation: pulse-status 2s infinite;
+    }
+    .tech-project-status.in-progress {
+      background: hsl(var(--warning));
+      box-shadow: 0 0 0 0 hsl(var(--warning) / 0.7);
+    }
+    .tech-project-status.planned {
+      background: hsl(var(--secondary));
+      box-shadow: 0 0 0 0 hsl(var(--secondary) / 0.7);
+    }
+    
+    /* Animaciones adicionales para interactividad */
+    .pillar-card .expand-indicator {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: hsl(var(--primary) / 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-smooth);
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    .pillar-card:hover .expand-indicator {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .pillar-card.active .expand-indicator {
+      background: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+      transform: rotate(180deg);
+    }
+    .expand-indicator::before {
+      content: "⌄";
+      font-size: 14px;
+      font-weight: bold;
+      transition: var(--transition-smooth);
+    }
+    .pillar-card.active .expand-indicator::before {
+      transform: rotate(180deg);
+    }
+
+    /* =====================  PROYECTOS  ===================== */
+    .projects-section{
+      background: var(--gradient-neural);
+      color: hsl(var(--foreground)); 
+      padding:80px 0; 
+      position:relative;
+    }
+    .projects-section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+              background-image: 
+          linear-gradient(90deg, var(--laproff-alt-gris) / 0.1 1px, transparent 1px),
+          linear-gradient(var(--laproff-alt-gris) / 0.1 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+    }
+    .project-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:28px; margin-top:36px}
+    .project-card{
+      background: hsl(var(--card) / 0.9); 
+      border:2px solid hsl(var(--border) / 0.3);
+      backdrop-filter:blur(15px); 
+      border-radius:20px; 
+      padding:30px; 
+      cursor:pointer; 
+      position:relative;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      overflow:hidden;
+      animation: project-float-advanced 6s ease-in-out infinite;
+      box-shadow: 
+        0 6px 20px hsl(var(--primary) / 0.08),
+        0 0 0 0 hsl(var(--primary) / 0.2);
+    }
+    .project-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(90deg, var(--laproff-principal) / 0.05 1px, transparent 1px),
+        linear-gradient(var(--laproff-principal) / 0.05 1px, transparent 1px);
+      background-size: 30px 30px;
+      pointer-events: none;
+      opacity: 0;
+      transition: var(--transition-smooth)
+    }
+    .project-card:hover{
+      transform:translateY(-8px) scale(1.03) rotate(0.5deg); 
+      background: hsl(var(--card) / 0.98);
+      box-shadow: 
+        var(--shadow-neural), 
+        0 20px 40px var(--laproff-principal / 0.2),
+        0 0 0 8px hsl(var(--primary) / 0.1);
+      animation-play-state: paused;
+      border-color: hsl(var(--primary) / 0.5);
+    }
+    .project-card:hover::before {
+      opacity: 1;
+    }
+
+    @keyframes project-float-advanced {
+      0%, 100% { 
+        transform: translateY(0px) rotate(0deg); 
+        box-shadow: 
+          0 6px 20px hsl(var(--primary) / 0.08),
+          0 0 0 0 hsl(var(--primary) / 0.2);
+      }
+      25% { 
+        transform: translateY(-2px) rotate(0.2deg); 
+        box-shadow: 
+          0 8px 25px hsl(var(--primary) / 0.12),
+          0 0 0 2px hsl(var(--primary) / 0.15);
+      }
+      50% { 
+        transform: translateY(-4px) rotate(0deg); 
+        box-shadow: 
+          0 10px 30px hsl(var(--primary) / 0.16),
+          0 0 0 4px hsl(var(--primary) / 0.18);
+      }
+      75% { 
+        transform: translateY(-2px) rotate(-0.2deg); 
+        box-shadow: 
+          0 8px 25px hsl(var(--primary) / 0.12),
+          0 0 0 2px hsl(var(--primary) / 0.15);
+      }
+    }
+    .project-header{display:flex; align-items:center; gap:10px; margin-bottom:14px}
+    .project-icon{
+      width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+      background: var(--gradient-primary); 
+      font-size:1.2rem;
+      color: hsl(var(--primary-foreground));
+    }
+    /* Estados de proyecto mejorados con colores más distintivos */
+    .project-status{
+      padding: 6px 16px; 
+      border-radius: 25px; 
+      font-size: 0.85rem; 
+      font-weight: 800; 
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: all 0.3s ease;
+    }
+    
+    .project-status::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .project-status:hover::before {
+      left: 100%;
+    }
+    
+    /* Estado Completado - Verde vibrante */
+    .project-status{
+      background: linear-gradient(135deg, var(--laproff-alt-verde), #7dd3fc);
+      color: #1a202c;
+      border-color: var(--laproff-alt-verde);
+      box-shadow: 
+        0 4px 15px var(--laproff-alt-verde / 0.4),
+        0 0 0 0 var(--laproff-alt-verde / 0.3);
+      animation: status-pulse 2s ease-in-out infinite;
+    }
+    
+    /* Estado En Progreso - Naranja vibrante */
+    .project-status.in-progress{
+      background: linear-gradient(135deg, var(--laproff-comp-naranja), #fbbf24);
+      color: #1a202c;
+      border-color: var(--laproff-comp-naranja);
+      box-shadow: 
+        0 4px 15px var(--laproff-comp-naranja / 0.4),
+        0 0 0 0 var(--laproff-comp-naranja / 0.3);
+      animation: status-pulse-orange 2s ease-in-out infinite;
+    }
+    
+    /* Estado Planificado - Azul vibrante */
+    .project-status.planned{
+      background: linear-gradient(135deg, var(--laproff-comp-azul), #60a5fa);
+      color: #1a202c;
+      border-color: var(--laproff-comp-azul);
+      box-shadow: 
+        0 4px 15px var(--laproff-comp-azul / 0.4),
+        0 0 0 0 var(--laproff-comp-azul / 0.3);
+      animation: status-pulse-blue 2s ease-in-out infinite;
+    }
+    
+    /* Animaciones para los estados */
+    @keyframes status-pulse {
+      0%, 100% { 
+        box-shadow: 
+          0 4px 15px var(--laproff-alt-verde / 0.4),
+          0 0 0 0 var(--laproff-alt-verde / 0.3);
+      }
+      50% { 
+        box-shadow: 
+          0 6px 20px var(--laproff-alt-verde / 0.6),
+          0 0 0 4px var(--laproff-alt-verde / 0.2);
+      }
+    }
+    
+    @keyframes status-pulse-orange {
+      0%, 100% { 
+        box-shadow: 
+          0 4px 15px var(--laproff-comp-naranja / 0.4),
+          0 0 0 0 var(--laproff-comp-naranja / 0.3);
+      }
+      50% { 
+        box-shadow: 
+          0 6px 20px var(--laproff-comp-naranja / 0.6),
+          0 0 0 4px var(--laproff-comp-naranja / 0.2);
+      }
+    }
+    
+    @keyframes status-pulse-blue {
+      0%, 100% { 
+        box-shadow: 
+          0 4px 15px var(--laproff-comp-azul / 0.4),
+          0 0 0 0 var(--laproff-comp-azul / 0.3);
+      }
+      50% { 
+        box-shadow: 
+          0 6px 20px var(--laproff-comp-azul / 0.6),
+          0 0 0 4px var(--laproff-comp-azul / 0.2);
+      }
+    }
+    .project-title{font-size:1.25rem;font-weight:700;color: hsl(var(--primary)); margin:6px 0 10px}
+    .project-description{color: hsl(var(--muted-foreground))}
+
+    /* Secciones de impacto y beneficios mejoradas */
+    .business-impact{
+      background: linear-gradient(135deg, var(--laproff-principal / 0.08), var(--laproff-alternativo-oficial / 0.12)); 
+      border-left:6px solid var(--laproff-principal);
+      border-radius:16px; 
+      padding:20px; 
+      margin:20px 0;
+      box-shadow: 
+        0 4px 15px var(--laproff-principal / 0.1),
+        0 0 0 1px var(--laproff-principal / 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .business-impact::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(90deg, var(--laproff-principal / 0.03) 1px, transparent 1px),
+        linear-gradient(var(--laproff-principal / 0.03) 1px, transparent 1px);
+      background-size: 20px 20px;
+      pointer-events: none;
+    }
+    
+    .impact-title{
+      color: var(--laproff-principal); 
+      font-size:1rem; 
+      font-weight:800; 
+      display:flex; 
+      align-items:center; 
+      gap:10px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .impact-list{
+      list-style:none; 
+      padding:0; 
+      margin:12px 0 0;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .impact-list li{
+      position:relative; 
+      padding-left:24px; 
+      margin-bottom:8px; 
+      color: #1a202c; 
+      font-size:0.95rem;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    
+    .impact-list li::before{
+      content:"✓"; 
+      position:absolute; 
+      left:0; 
+      color: var(--laproff-alt-verde); 
+      font-weight:900;
+      font-size: 1.1rem;
+      text-shadow: 0 0 8px var(--laproff-alt-verde / 0.5);
+    }
+    
+    .impact-list li strong{
+      color: var(--laproff-principal);
+      font-weight: 700;
+    }
+
+    /* Barras de progreso mejoradas */
+    .project-progress{margin-top:16px}
+    .progress-label{
+      display:flex; 
+      justify-content:space-between; 
+      font-size:0.95rem; 
+      margin-bottom:8px; 
+      color: #1a202c;
+      font-weight: 600;
+    }
+    .progress-bar{
+      height:12px; 
+      background: #e2e8f0; 
+      border-radius:999px; 
+      overflow:hidden;
+      border: 2px solid #cbd5e0;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .progress-fill{
+      height:100%; 
+      background: linear-gradient(90deg, var(--laproff-principal), var(--laproff-comp-azul));
+      transition:width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: progress-shine 2s ease-in-out infinite;
+    }
+    
+    @keyframes progress-shine {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .project-pillars{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+    .pillar-tag{background: hsl(var(--primary) / 0.2); color: hsl(var(--primary)); padding:4px 10px; border-radius:999px; font-size:.78rem; font-weight:600}
+    
+    /* Botones de demo ultra-innovadores con efectos avanzados */
+    .demo-button {
+      background: var(--gradient-primary);
+      color: hsl(var(--primary-foreground));
+      border: none;
+      padding: 16px 32px;
+      border-radius: 16px;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      margin-top: 16px;
+      box-shadow: 
+        0 8px 25px hsl(var(--primary) / 0.4),
+        0 0 0 0 hsl(var(--primary) / 0.7);
+      position: relative;
+      overflow: hidden;
+      animation: float-btn-advanced 4s ease-in-out infinite;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .demo-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: left 0.6s ease-out;
+    }
+    
+    .demo-button::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: all 0.3s ease;
+    }
+    
+    .demo-button:hover {
+      transform: translateY(-6px) scale(1.08) rotate(1deg);
+      box-shadow: 
+        0 15px 35px hsl(var(--primary) / 0.6),
+        0 0 0 8px hsl(var(--primary) / 0.1);
+      animation-play-state: paused;
+      background: linear-gradient(135deg, var(--laproff-comp-azul), var(--laproff-principal), var(--laproff-alternativo-oficial));
+    }
+    
+    .demo-button:hover::before {
+      left: 100%;
+    }
+    
+    .demo-button:hover::after {
+      width: 300px;
+      height: 300px;
+    }
+    
+    .demo-button:active {
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 
+        0 8px 20px hsl(var(--primary) / 0.5),
+        0 0 0 4px hsl(var(--primary) / 0.2);
+    }
+    
+    @keyframes float-btn-advanced {
+      0%, 100% { 
+        transform: translateY(0px) rotate(0deg); 
+        box-shadow: 
+          0 8px 25px hsl(var(--primary) / 0.4),
+          0 0 0 0 hsl(var(--primary) / 0.7);
+      }
+      25% { 
+        transform: translateY(-4px) rotate(0.5deg); 
+        box-shadow: 
+          0 12px 30px hsl(var(--primary) / 0.5),
+          0 0 0 2px hsl(var(--primary) / 0.3);
+      }
+      50% { 
+        transform: translateY(-6px) rotate(0deg); 
+        box-shadow: 
+          0 15px 35px hsl(var(--primary) / 0.6),
+          0 0 0 4px hsl(var(--primary) / 0.4);
+      }
+      75% { 
+        transform: translateY(-4px) rotate(-0.5deg); 
+        box-shadow: 
+          0 12px 30px hsl(var(--primary) / 0.5),
+          0 0 0 2px hsl(var(--primary) / 0.3);
+      }
+    }
+
+    /* =====================  DEMOS  ===================== */
+    .demo-section{background: hsl(var(--card)); padding:80px 0}
+    .demo-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin-top:26px}
+    .demo-card{
+      background: hsl(var(--card)); 
+      border-left:6px solid hsl(var(--primary));
+      border-radius:16px; 
+      padding:20px 20px 18px; 
+      cursor:pointer; 
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 
+        0 4px 15px hsl(var(--primary) / 0.1),
+        0 0 0 0 hsl(var(--primary) / 0.2);
+    }
+    .demo-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, hsl(var(--primary) / 0.05), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .demo-card:hover{
+      transform:translateY(-4px) scale(1.02); 
+      box-shadow: 
+        var(--shadow-card),
+        0 8px 25px hsl(var(--primary) / 0.2),
+        0 0 0 4px hsl(var(--primary) / 0.1);
+      border-left-width: 8px;
+    }
+    .demo-card:hover::before {
+      opacity: 1;
+    }
+    .demo-card.active{
+      background: var(--gradient-primary); 
+      color: hsl(var(--primary-foreground)); 
+      border-left-color:transparent;
+      box-shadow: 
+        var(--shadow-glow),
+        0 0 0 6px hsl(var(--primary) / 0.2);
+      transform: translateY(-2px) scale(1.01);
+    }
+    .demo-title{font-size:1.05rem; font-weight:800; color: hsl(var(--primary)); margin-bottom:6px}
+    .demo-card.active .demo-title{color: hsl(var(--primary-foreground))}
+    .demo-text{color: hsl(var(--muted-foreground))}
+    .demo-card.active .demo-text{color: hsl(var(--primary-foreground) / 0.9)}
+
+    /* =====================  DASHBOARDS  ===================== */
+    .dashboard{
+      background: hsl(var(--card)); 
+      color: hsl(var(--foreground)); 
+      border-radius:16px; 
+      padding:26px; 
+      margin-top:26px; 
+      display:none;
+      border: 1px solid hsl(var(--border));
+      position: relative;
+      overflow: hidden;
+    }
+    .dashboard::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(90deg, hsl(185 100% 50% / 0.02) 1px, transparent 1px),
+        linear-gradient(hsl(185 100% 50% / 0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+    .dashboard.active{display:block; animation:fadeIn .45s ease}
+    .dashboard-header{
+      display:flex; justify-content:space-between; align-items:center; gap:16px;
+      padding-bottom:14px; border-bottom:1px solid hsl(var(--border)); margin-bottom:16px;
+    }
+    .dashboard-title{font-size:1.2rem; font-weight:800; color: hsl(var(--primary)); display:flex; align-items:center; gap:10px}
+    .status-indicator{width:12px;height:12px;border-radius:999px;background: hsl(var(--success)); box-shadow:0 0 0 0 hsl(var(--success) / 0.8); animation:pulse-status 2s infinite}
+    .status-text{font-size:.9rem; color: hsl(var(--muted-foreground))}
+    .kpis{
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin:16px 0 8px;
+    }
+    .kpi{
+      background: hsl(var(--muted) / 0.1); 
+      border:1px solid hsl(var(--border));
+      border-radius:12px; 
+      padding:14px; 
+      text-align:center;
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(90deg, hsl(185 100% 50% / 0.03) 1px, transparent 1px),
+        linear-gradient(hsl(185 100% 50% / 0.03) 1px, transparent 1px);
+      background-size: 15px 15px;
+      pointer-events: none;
+    }
+    .kpi .value{font-size:1.6rem; font-weight:900; color: hsl(var(--primary))}
+    .kpi .label{font-size:.85rem; color: hsl(var(--muted-foreground)); margin-top:4px}
+    .charts{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin-top:12px}
+    .chart-card{
+      background: hsl(var(--muted) / 0.1); 
+      border:1px solid hsl(var(--border));
+      border-radius:12px; 
+      padding:12px 12px 6px;
+      position: relative;
+      overflow: hidden;
+    }
+    .chart-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(90deg, var(--laproff-principal) / 0.02 1px, transparent 1px),
+        linear-gradient(var(--laproff-principal) / 0.02 1px, transparent 1px);
+      background-size: 20px 20px;
+      pointer-events: none;
+    }
+    .chart-title{font-size:.92rem; font-weight:700; color: hsl(var(--primary)); margin:2px 2px 8px}
+    canvas{width:100% !important; height:260px !important}
+
+    /* Enhanced demo visuals con gráficos más innovadores */
+    .demo-visual-element {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, var(--laproff-principal), var(--laproff-comp-azul));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      animation: pulse-glow 2s ease-in-out infinite alternate;
+      box-shadow: 0 4px 15px var(--laproff-principal / 0.4);
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+
+    .demo-visual-element::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, var(--laproff-principal), var(--laproff-comp-azul), var(--laproff-alternativo-oficial));
+      border-radius: 50%;
+      z-index: -1;
+      animation: rotate 3s linear infinite;
+    }
+
+    .demo-status-indicator {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      width: 16px;
+      height: 16px;
+      background: var(--laproff-alt-verde);
+      border-radius: 50%;
+      animation: pulse-status 2s ease-in-out infinite;
+      box-shadow: 0 0 10px var(--laproff-alt-verde / 0.6);
+    }
+
+    .demo-status-indicator::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      background: white;
+      border-radius: 50%;
+      animation: inner-pulse 1.5s ease-in-out infinite;
+    }
+
+    .demo-progress-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      border: 4px solid var(--laproff-alt-gris / 0.3);
+      border-top: 4px solid var(--laproff-principal);
+      border-right: 4px solid var(--laproff-comp-azul);
+      border-radius: 50%;
+      animation: spin 2s linear infinite;
+      box-shadow: 0 0 20px var(--laproff-principal / 0.3);
+    }
+
+    .demo-progress-ring::before {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: -4px;
+      right: -4px;
+      bottom: -4px;
+      border: 2px solid var(--laproff-alternativo-oficial / 0.5);
+      border-radius: 50%;
+      animation: spin-reverse 3s linear infinite;
+    }
+
+    /* Nuevos elementos visuales innovadores */
+    .demo-data-flow {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 60px;
+      height: 40px;
+      background: linear-gradient(90deg, var(--laproff-principal), var(--laproff-comp-azul));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      animation: data-flow 2s ease-in-out infinite;
+    }
+
+    .demo-performance-bar {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 80px;
+      height: 6px;
+      background: var(--laproff-alt-gris / 0.3);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .demo-performance-bar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 75%;
+      background: linear-gradient(90deg, var(--laproff-alt-verde), var(--laproff-comp-azul));
+      border-radius: 3px;
+      animation: performance-fill 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse-status {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.8; }
+    }
+
+    @keyframes inner-pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      50% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.7; }
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes spin-reverse {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(-360deg); }
+    }
+
+    @keyframes data-flow {
+      0%, 100% { transform: translateX(0); opacity: 1; }
+      50% { transform: translateX(5px); opacity: 0.8; }
+    }
+
+    @keyframes performance-fill {
+      0%, 100% { width: 75%; }
+      50% { width: 85%; }
+    }
+
+    .equipment-status{margin-top:14px}
+    .equipment-row{
+      display:flex; justify-content:space-between; align-items:center; padding:10px 0;
+      border-bottom:1px dashed hsl(var(--border) / 0.5);
+    }
+    .equip-name{color: hsl(var(--foreground)); font-size:.95rem}
+    .equip-dot{width:10px;height:10px;border-radius:999px;background: hsl(var(--success)); position:relative}
+    .equip-dot.warn{background: hsl(var(--warning))}
+    .equip-dot.crit{background: hsl(var(--destructive))}
+    .equip-dot[data-tip]:hover::after{
+      content:attr(data-tip); 
+      position:absolute; 
+      top:-34px; 
+      right:-8px; 
+      white-space:nowrap;
+      background: hsl(var(--card)); 
+      color: hsl(var(--foreground)); 
+      padding:6px 8px; 
+      border-radius:8px; 
+      font-size:.75rem; 
+      border:1px solid hsl(var(--border));
+      box-shadow: var(--shadow-card);
+    }
+
+    /* =====================  FUTURO  ===================== */
+    .future-section{
+      background: var(--gradient-primary); 
+      color: hsl(var(--primary-foreground)); 
+      padding:80px 0; 
+      text-align:center;
+    }
+    .future-content{max-width:860px;margin:0 auto}
+    .future-title{font-size:2.1rem; font-weight:900; margin-bottom:10px}
+    .future-description{font-size:1.07rem; opacity:.95}
+
+    /* =====================  DEMOS INTERACTIVOS  ===================== */
+    .demos-section {
+      background: hsl(var(--card));
+      padding: 80px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .demos-section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+    }
+    .demos-header {
+      text-align: center;
+      margin-bottom: 60px;
+      position: relative;
+      z-index: 2;
+    }
+    .demos-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: hsl(var(--primary));
+      margin-bottom: 16px;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .demos-subtitle {
+      font-size: 1.2rem;
+      color: hsl(var(--muted-foreground));
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .demos-container {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .demo-panel {
+      display: none;
+      background: hsl(var(--card));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-card);
+      border: 1px solid hsl(var(--border));
+      overflow: hidden;
+      animation: fadeInUp 0.6s ease-out;
+    }
+    .demo-panel.active {
+      display: block;
+    }
+    .demo-header {
+      background: var(--gradient-primary);
+      color: hsl(var(--primary-foreground));
+      padding: 32px;
+      text-align: center;
+    }
+    .demo-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+    .demo-header h3 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .demo-header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+    .demo-content {
+      padding: 40px;
+    }
+    .demo-visual {
+      display: grid;
+      gap: 32px;
+      align-items: start;
+    }
+    
+    /* Document Flow (Bach Record) */
+    .document-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .flow-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      background: hsl(var(--muted));
+      border-radius: 12px;
+      min-width: 140px;
+      transition: var(--transition-smooth);
+    }
+    .flow-step.active {
+      background: var(--gradient-primary);
+      color: hsl(var(--primary-foreground));
+      transform: scale(1.05);
+    }
+    .step-icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+    .step-info h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .step-info p {
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+    .flow-arrow {
+      font-size: 1.5rem;
+      color: hsl(var(--primary));
+      font-weight: bold;
+    }
+    .demo-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 20px;
+      margin-top: 32px;
+    }
+    .stat-item {
+      text-align: center;
+      padding: 20px;
+      background: hsl(var(--muted));
+      border-radius: 12px;
+      border: 1px solid hsl(var(--border));
+    }
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: hsl(var(--primary));
+      margin-bottom: 8px;
+    }
+    .stat-label {
+      font-size: 0.9rem;
+      color: hsl(var(--muted-foreground));
+    }
+    
+    /* Lab Dashboard (LIMS) */
+    .lab-dashboard {
+      display: grid;
+      gap: 32px;
+    }
+    .lab-metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+    }
+    .metric-card {
+      background: hsl(var(--muted));
+      padding: 24px;
+      border-radius: 12px;
+      text-align: center;
+      border: 1px solid hsl(var(--border));
+      transition: var(--transition-smooth);
+    }
+    .metric-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-card);
+    }
+    .metric-icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+    .metric-value {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: hsl(var(--primary));
+      margin-bottom: 8px;
+    }
+    .metric-label {
+      font-size: 0.9rem;
+      color: hsl(var(--muted-foreground));
+    }
+    .process-flow {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .process-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background: hsl(var(--muted));
+      border-radius: 8px;
+      border: 1px solid hsl(var(--border));
+    }
+    .step-number {
+      background: var(--gradient-primary);
+      color: hsl(var(--primary-foreground));
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .step-text {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    
+    /* Infrastructure Grid */
+    .infrastructure-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+    .infra-card {
+      background: hsl(var(--muted));
+      padding: 24px;
+      border-radius: 12px;
+      text-align: center;
+      border: 1px solid hsl(var(--border));
+      transition: var(--transition-smooth);
+    }
+    .infra-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-card);
+    }
+    .infra-icon {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+    }
+    .infra-card h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .infra-status {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .infra-status.online {
+      background: hsl(var(--success));
+      color: hsl(var(--success-foreground));
+    }
+    .infra-metric {
+      font-size: 0.9rem;
+      color: hsl(var(--muted-foreground));
+    }
+    .performance-chart {
+      background: hsl(var(--muted));
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid hsl(var(--border));
+    }
+    .chart-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .chart-bars {
+      display: flex;
+      justify-content: space-around;
+      align-items: end;
+      height: 120px;
+      gap: 16px;
+    }
+    .chart-bar {
+      background: var(--gradient-primary);
+      border-radius: 4px 4px 0 0;
+      min-width: 40px;
+      position: relative;
+      transition: var(--transition-smooth);
+    }
+    .chart-bar:hover {
+      transform: scaleY(1.1);
+    }
+    .bar-label {
+      position: absolute;
+      bottom: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    
+    /* Analysis Interface (LabSolutions) */
+    .analysis-interface {
+      background: hsl(var(--muted));
+      border-radius: 12px;
+      border: 1px solid hsl(var(--border));
+      overflow: hidden;
+    }
+    .interface-header {
+      background: var(--gradient-primary);
+      color: hsl(var(--primary-foreground));
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .interface-header h4 {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    .interface-controls {
+      display: flex;
+      gap: 8px;
+    }
+    .control-btn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: hsl(var(--primary-foreground));
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+    .control-btn.active,
+    .control-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      padding: 24px;
+    }
+    .analysis-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px;
+      background: hsl(var(--card));
+      border-radius: 8px;
+      border: 1px solid hsl(var(--border));
+    }
+    .analysis-icon {
+      font-size: 2rem;
+    }
+    .data-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: hsl(var(--primary));
+      margin-bottom: 4px;
+    }
+    .data-label {
+      font-size: 0.8rem;
+      color: hsl(var(--muted-foreground));
+    }
+    .real-time-chart {
+      height: 80px;
+      background: hsl(var(--card));
+      margin: 0 24px 24px;
+      border-radius: 8px;
+      display: flex;
+      align-items: end;
+      padding: 16px;
+      gap: 8px;
+    }
+    .chart-line {
+      flex: 1;
+      background: var(--gradient-primary);
+      border-radius: 2px;
+      animation: chartPulse 2s ease-in-out infinite;
+    }
+    .chart-line:nth-child(1) { height: 60%; animation-delay: 0s; }
+    .chart-line:nth-child(2) { height: 80%; animation-delay: 0.5s; }
+    .chart-line:nth-child(3) { height: 40%; animation-delay: 1s; }
+    .chart-line:nth-child(4) { height: 90%; animation-delay: 1.5s; }
+    @keyframes chartPulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+    
+    /* AI Dashboard */
+    .ai-dashboard {
+      display: grid;
+      gap: 32px;
+    }
+    .ai-metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+    }
+    .ai-metric {
+      background: hsl(var(--muted));
+      padding: 24px;
+      border-radius: 12px;
+      text-align: center;
+      border: 1px solid hsl(var(--border));
+    }
+    .ai-icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+    .ai-value {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: hsl(var(--primary));
+      margin-bottom: 8px;
+    }
+    .ai-label {
+      font-size: 0.9rem;
+      color: hsl(var(--muted-foreground));
+    }
+    .ai-processes {
+      display: grid;
+      gap: 16px;
+    }
+    .process-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px;
+      background: hsl(var(--muted));
+      border-radius: 8px;
+      border: 1px solid hsl(var(--border));
+    }
+    .process-icon {
+      font-size: 1.5rem;
+    }
+    .process-info h5 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .process-bar {
+      width: 100%;
+      height: 8px;
+      background: hsl(var(--border));
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .process-fill {
+      height: 100%;
+      background: var(--gradient-primary);
+      border-radius: 4px;
+      transition: width 1s ease-out;
+    }
+    
+    /* OptiSign Display */
+    .optisign-display {
+      background: hsl(var(--card));
+      border-radius: 12px;
+      border: 1px solid hsl(var(--border));
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+    .display-header {
+      background: var(--gradient-primary);
+      color: hsl(var(--primary-foreground));
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .display-status {
+      background: rgba(255,255,255,0.2);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .display-status.online {
+      background: hsl(var(--success));
+      color: hsl(var(--success-foreground));
+    }
+    .display-time {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    .display-content {
+      padding: 24px;
+    }
+    .content-section {
+      margin-bottom: 24px;
+    }
+    .content-section h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: hsl(var(--primary));
+    }
+    .announcement {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: hsl(var(--muted));
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+    .announcement-icon {
+      font-size: 1.2rem;
+    }
+    .announcement-text {
+      font-size: 0.9rem;
+    }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 16px;
+    }
+    .metric-display {
+      text-align: center;
+      padding: 16px;
+      background: hsl(var(--muted));
+      border-radius: 8px;
+    }
+    .metric-display .metric-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: hsl(var(--primary));
+      margin-bottom: 4px;
+    }
+    .metric-display .metric-label {
+      font-size: 0.8rem;
+      color: hsl(var(--muted-foreground));
+    }
+    .optisign-controls {
+      margin-top: 24px;
+    }
+    .control-panel {
+      background: hsl(var(--muted));
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid hsl(var(--border));
+    }
+    .control-panel h5 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .screen-list {
+      display: grid;
+      gap: 12px;
+    }
+    .screen-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: hsl(var(--card));
+      border-radius: 6px;
+      border: 1px solid hsl(var(--border));
+    }
+    .screen-item.online {
+      border-left: 4px solid hsl(var(--success));
+    }
+    .screen-item.offline {
+      border-left: 4px solid hsl(var(--destructive));
+      opacity: 0.6;
+    }
+    .screen-icon {
+      font-size: 1.2rem;
+    }
+    .screen-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    
+    /* Demo Navigation */
+    .demo-navigation {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: hsl(var(--muted));
+      border: 1px solid hsl(var(--border));
+      color: hsl(var(--foreground));
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+    .nav-btn:hover,
+    .nav-btn.active {
+      background: var(--gradient-primary);
+      color: hsl(var(--primary-foreground));
+      border-color: hsl(var(--primary));
+      transform: translateY(-2px);
+    }
+
+    /* =====================  FRASE INSPIRADORA  ===================== */
+    .inspiration-section {
+      background: linear-gradient(135deg, hsl(210 25% 5%), hsl(195 100% 45%), hsl(185 100% 50%));
+      padding: 100px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .inspiration-section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+    .inspiration-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    .inspiration-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.4;
+      color: hsl(var(--primary-foreground));
+      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      animation: fadeInUp 1s ease-out;
+      max-width: 900px;
+      margin: 0 auto;
+      letter-spacing: 0.3px;
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* =====================  ANIMACIONES  ===================== */
+    @keyframes pulse{0%,100%{opacity:.28} 50%{opacity:.1}}
+    @keyframes pulse-status{0%{box-shadow:0 0 0 0 hsl(var(--success) / 0.7)} 70%{box-shadow:0 0 0 14px hsl(var(--success) / 0)} 100%{box-shadow:0 0 0 0 hsl(var(--success) / 0)}}
+    @keyframes fadeIn{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:translateY(0)}}
+    @keyframes ripple{to{transform:scale(4); opacity:0}}
+    @keyframes slideInUp{from{opacity:0; transform:translateY(30px)} to{opacity:1; transform:translateY(0)}}
+    @keyframes glowPulse{0%,100%{box-shadow:0 0 20px hsl(var(--primary) / 0.3)} 50%{box-shadow:0 0 30px hsl(var(--primary) / 0.6)}}
+    
+    /* Animaciones para proyectos tecnológicos */
+    .tech-project-item {
+      animation: slideInUp 0.6s ease forwards;
+    }
+    
+    .tech-project-item:nth-child(1) { animation-delay: 0.1s; }
+    .tech-project-item:nth-child(2) { animation-delay: 0.2s; }
+    .tech-project-item:nth-child(3) { animation-delay: 0.3s; }
+    .tech-project-item:nth-child(4) { animation-delay: 0.4s; }
+    .tech-project-item:nth-child(5) { animation-delay: 0.5s; }
+          .tech-project-item:nth-child(6) { animation-delay: 0.6s; }
+      
+      /* Efectos hover mejorados */
+      .pillar-card:hover .pillar-icon {
+        animation: glowPulse 2s ease-in-out infinite;
+      }
+      
+      .tech-project-item:hover .tech-project-icon {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 6px 20px hsl(var(--primary) / 0.4);
+      }
+
+      /* Responsive para frase inspiradora */
+      @media (max-width: 768px) {
+        .inspiration-section {
+          padding: 60px 0;
+        }
+        .inspiration-title {
+          font-size: 1.6rem;
+          line-height: 1.5;
+          padding: 0 20px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .inspiration-section {
+          padding: 40px 0;
+        }
+        .inspiration-title {
+          font-size: 1.3rem;
+          line-height: 1.6;
+          padding: 0 15px;
+        }
+      }
+
+    /* =====================  RESPONSIVE  ===================== */
+    @media (max-width: 768px){
+      .header{padding:44px 0}
+      .logo-title{font-size:1.5rem}
+      .subtitle{font-size:1.05rem}
+      .pillars-section{margin:-22px 12px 40px}
+      .charts canvas{height:220px !important}
+      
+      /* Responsive para panel de proyectos tecnológicos */
+      .tech-projects-panel.active {
+        padding: 20px;
+        margin-top: 16px;
+      }
+      
+      .tech-projects-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      
+      .tech-project-item {
+        padding: 16px;
+      }
+      
+      .tech-projects-title {
+        font-size: 1.2rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+      
+      .tech-projects-subtitle {
+        margin-left: 0;
+        font-size: 0.9rem;
+      }
+      
+      .pillar-card .expand-indicator {
+        width: 20px;
+        height: 20px;
+        bottom: 8px;
+        right: 8px;
+      }
+      
+      .expand-indicator::before {
+        font-size: 12px;
+      }
+      
+      /* Responsive para sección de demos */
+      .demos-section {
+        padding: 60px 0;
+      }
+      
+      .demos-title {
+        font-size: 2rem;
+      }
+      
+      .demos-subtitle {
+        font-size: 1rem;
+      }
+      
+      .demo-content {
+        padding: 24px;
+      }
+      
+      .document-flow {
+        flex-direction: column;
+        gap: 16px;
+      }
+      
+      .flow-step {
+        min-width: auto;
+        width: 100%;
+      }
+      
+      .flow-arrow {
+        transform: rotate(90deg);
+      }
+      
+      .lab-metrics,
+      .ai-metrics {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      
+      .infrastructure-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      
+      .analysis-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 16px;
+      }
+      
+      .interface-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      
+      .demo-navigation {
+        gap: 8px;
+      }
+      
+      .nav-btn {
+        padding: 10px 16px;
+        font-size: 0.8rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .tech-projects-panel.active {
+        padding: 16px;
+      }
+      
+      .tech-project-item {
+        padding: 12px;
+      }
+      
+      .tech-project-header {
+        gap: 8px;
+      }
+      
+      .tech-project-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+      }
+      
+      .tech-project-title {
+        font-size: 1rem;
+      }
+      
+      .tech-project-description {
+        font-size: 0.85rem;
+      }
+      
+      .tech-project-impact {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+      }
+      
+      /* Responsive para frase inspiradora */
+      .inspiration-title {
+        font-size: 1.8rem;
+        line-height: 1.4;
+      }
+      
+      .demo-button {
+        padding: 10px 20px;
+        font-size: 0.85rem;
+      }
+      
+      /* Responsive para sección de demos en móvil */
+      .demos-section {
+        padding: 40px 0;
+      }
+      
+      .demos-title {
+        font-size: 1.6rem;
+      }
+      
+      .demos-subtitle {
+        font-size: 0.9rem;
+      }
+      
+      .demo-header {
+        padding: 20px;
+      }
+      
+      .demo-icon {
+        font-size: 2rem;
+      }
+      
+      .demo-header h3 {
+        font-size: 1.4rem;
+      }
+      
+      .demo-content {
+        padding: 16px;
+      }
+      
+      .demo-stats {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      
+      .stat-item {
+        padding: 16px;
+      }
+      
+      .stat-number {
+        font-size: 1.4rem;
+      }
+      
+      .metric-card,
+      .ai-metric {
+        padding: 16px;
+      }
+      
+      .metric-value,
+      .ai-value {
+        font-size: 1.4rem;
+      }
+      
+      .process-step {
+        padding: 12px;
+      }
+      
+      .step-number {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+      }
+      
+      .infra-card {
+        padding: 16px;
+      }
+      
+      .infra-icon {
+        font-size: 2rem;
+      }
+      
+      .chart-bars {
+        height: 80px;
+        gap: 8px;
+      }
+      
+      .chart-bar {
+        min-width: 30px;
+      }
+      
+      .analysis-card {
+        padding: 16px;
+      }
+      
+      .analysis-icon {
+        font-size: 1.5rem;
+      }
+      
+      .data-value {
+        font-size: 1.2rem;
+      }
+      
+      .real-time-chart {
+        height: 60px;
+        margin: 0 16px 16px;
+        padding: 12px;
+      }
+      
+      .process-item {
+        padding: 16px;
+      }
+      
+      .process-icon {
+        font-size: 1.2rem;
+      }
+      
+      .display-content {
+        padding: 16px;
+      }
+      
+      .announcement {
+        padding: 10px;
+      }
+      
+      .metrics-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      
+      .metric-display {
+        padding: 12px;
+      }
+      
+      .metric-display .metric-value {
+        font-size: 1.2rem;
+      }
+      
+      .control-panel {
+        padding: 16px;
+      }
+      
+      .demo-navigation {
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .nav-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 0.9rem;
+      }
+    }
+      
+      @media (max-width: 480px) {
+        .inspiration-title {
+          font-size: 1.5rem;
+          line-height: 1.5;
+        }
+        
+        .inspiration-section {
+          padding: 60px 0;
+        }
+        
+        .demo-button {
+          padding: 8px 16px;
+          font-size: 0.8rem;
+        }
+        
+        .header-content {
+          flex-direction: column;
+          gap: 16px;
+        }
+        
+        .prototype-logo {
+          align-self: center;
+        }
+      }
+
+      /* Estilos para los contenedores de logos y botones de subida */
+      .logo-container {
+        position: relative;
+        display: inline-block;
+      }
+
+      .logo-upload-btn {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--gradient-primary);
+        border: 2px solid white;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0;
+        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 10;
+        box-shadow: 
+          0 4px 15px var(--laproff-principal / 0.4),
+          0 0 0 0 var(--laproff-principal / 0.7);
+        animation: float-btn-advanced 3s ease-in-out infinite;
+        font-weight: bold;
+      }
+
+      .logo-container:hover .logo-upload-btn {
+        opacity: 1;
+        animation-play-state: paused;
+      }
+
+      .logo-upload-btn:hover {
+        background: linear-gradient(135deg, var(--laproff-comp-azul), var(--laproff-principal), var(--laproff-alternativo-oficial));
+        transform: scale(1.3) translateY(-3px) rotate(5deg);
+        box-shadow: 
+          0 8px 25px var(--laproff-principal / 0.6),
+          0 0 0 6px var(--laproff-principal / 0.2);
+      }
+
+      .logo-upload-btn:active {
+        transform: scale(1.1) translateY(-1px);
+        box-shadow: 
+          0 4px 15px var(--laproff-principal / 0.5),
+          0 0 0 3px var(--laproff-principal / 0.3);
+      }
+
+      @keyframes float-btn-advanced {
+        0%, 100% { 
+          transform: translateY(0px) rotate(0deg); 
+          box-shadow: 
+            0 4px 15px var(--laproff-principal / 0.4),
+            0 0 0 0 var(--laproff-principal / 0.7);
+        }
+        25% { 
+          transform: translateY(-3px) rotate(2deg); 
+          box-shadow: 
+            0 6px 20px var(--laproff-principal / 0.5),
+            0 0 0 2px var(--laproff-principal / 0.3);
+        }
+        50% { 
+          transform: translateY(-5px) rotate(0deg); 
+          box-shadow: 
+            0 8px 25px var(--laproff-principal / 0.6),
+            0 0 0 4px var(--laproff-principal / 0.4);
+        }
+        75% { 
+          transform: translateY(-3px) rotate(-2deg); 
+          box-shadow: 
+            0 6px 20px var(--laproff-principal / 0.5),
+            0 0 0 2px var(--laproff-principal / 0.3);
+        }
+      }
+
+      .logo-upload-btn svg {
+        width: 12px;
+        height: 12px;
+      }
+  </style>
+</head>
+<body>
+  <!-- =====================  HEADER  ===================== -->
+  <header class="header">
+    <div class="container header-content">
+      <!-- Logo Laproff (Izquierda) -->
+      <div class="logo-section">
+        <div class="logo-container" id="laproff-logo-container">
+          <img src="laproff.png" alt="Laproff logo" class="logo-svg" style="width: 128px; height: 128px; object-fit: contain;">
+          <input type="file" id="laproff-logo-input" accept="image/*" style="display: none;" onchange="changeLogo('laproff', this)">
+          <button class="logo-upload-btn" onclick="document.getElementById('laproff-logo-input').click()" title="Cambiar logo Laproff">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7,10 12,15 17,10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+          </button>
+        </div>
+        <div class="logo-text">
+          <div class="logo-title">Laboratorios Laproff</div>
+          <div class="tagline">"Siempre Contigo"</div>
+        </div>
+      </div>
+      
+      <!-- Título Principal Centrado -->
+      <div class="main-title-section">
+        <div class="subtitle">Adopción Tecnológica</div>
+      </div>
+      
+      <!-- Logo Prototipado (Derecha) -->
+      <div class="prototype-logo" title="Prototipado Digital">
+        <div class="logo-container" id="prototype-logo-container">
+          <img src="prototipado.webp" alt="Prototipado logo" style="width: 96px; height: 96px; object-fit: contain; border-radius: 8px;">
+          <input type="file" id="prototype-logo-input" accept="image/*" style="display: none;" onchange="changeLogo('prototype', this)">
+          <button class="logo-upload-btn" onclick="document.getElementById('prototype-logo-input').click()" title="Cambiar logo Prototipado">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7,10 12,15 17,10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- =====================  PILARES  ===================== -->
+  <section class="pillars-section">
+    <div class="container">
+      <h2 class="section-title">Pilares Corporativos</h2>
+      <div class="pillars-grid">
+        <article class="pillar-card" data-pillar="tecnologia">
+          <div class="pillar-icon">🚀</div>
+          <h3 class="pillar-title">Tecnología</h3>
+          <p class="pillar-description">Para Laproff, la apropiación de Nuevas Tecnologías es un imperativo para alcanzar la excelencia operativa y potenciar nuestro propósito de servicio.</p>
+          <div class="expand-indicator"></div>
+        </article>
+        <article class="pillar-card" data-pillar="calidad">
+          <div class="pillar-icon">🔬</div>
+          <h3 class="pillar-title">Calidad con Investigación</h3>
+          <p class="pillar-description">La investigación es uno de los pilares del progreso de la ciencia y de la sociedad; sustentamos con evidencia y rigor cada mejora.</p>
+          <div class="expand-indicator"></div>
+        </article>
+        <article class="pillar-card" data-pillar="innovacion">
+          <div class="pillar-icon">💡</div>
+          <h3 class="pillar-title">Innovación</h3>
+          <p class="pillar-description">Nuestro MEGAPROPÓSITO: ser únicos. Buscamos hacer las cosas de forma diferente y llevar al mercado propuestas que nos distingan.</p>
+          <div class="expand-indicator"></div>
+        </article>
+        <article class="pillar-card" data-pillar="sostenibilidad">
+          <div class="pillar-icon">🌱</div>
+          <h3 class="pillar-title">Sostenibilidad</h3>
+          <p class="pillar-description">Trabajar por las nuevas generaciones es parte esencial de nuestro compromiso con la sociedad y el medio ambiente.</p>
+          <div class="expand-indicator"></div>
+        </article>
+        
+        <!-- Panel desplegable para proyectos tecnológicos -->
+        <div class="tech-projects-panel" id="tech-projects-panel">
+          <div class="tech-projects-header">
+            <div class="tech-projects-title">
+              🚀 Adopción Tecnológica
+              <span class="tech-projects-subtitle">Proyectos Core del Negocio</span>
+            </div>
+          </div>
+          
+          <div class="tech-projects-grid">
+            <!-- Bach récord electrónico -->
+            <div class="tech-project-item">
+              <div class="tech-project-status in-progress"></div>
+              <div class="tech-project-header">
+                <div class="tech-project-icon">📋</div>
+                <h4 class="tech-project-title">Bach récord electrónico</h4>
+              </div>
+              <p class="tech-project-description">Digitaliza la trazabilidad y optimiza la gestión documental.</p>
+              <div class="tech-project-impact">💡 Optimiza trazabilidad y reduce tiempos en gestión documental</div>
+            </div>
+            
+            <!-- Renovación de infraestructura -->
+            <div class="tech-project-item">
+              <div class="tech-project-status in-progress"></div>
+              <div class="tech-project-header">
+                <div class="tech-project-icon">🌐</div>
+                <h4 class="tech-project-title">Renovación de Infraestructura</h4>
+              </div>
+              <p class="tech-project-description">Moderniza la base tecnológica para asegurar rendimiento y disponibilidad.</p>
+              <div class="tech-project-impact">🚀 Moderniza plataforma tecnológica para mayor estabilidad y seguridad</div>
+            </div>
+            
+            <!-- Actualización de LabSolutions -->
+            <div class="tech-project-item">
+              <div class="tech-project-status"></div>
+              <div class="tech-project-header">
+                <div class="tech-project-icon">📊</div>
+                <h4 class="tech-project-title">Actualización de LabSolutions</h4>
+              </div>
+              <p class="tech-project-description">Incrementa la capacidad de análisis y precisión en la toma de decisiones.</p>
+              <div class="tech-project-impact">📈 Mejora velocidad y precisión en análisis y reportes</div>
+            </div>
+            
+            <!-- Implementación de IA -->
+            <div class="tech-project-item">
+              <div class="tech-project-status planned"></div>
+              <div class="tech-project-header">
+                <div class="tech-project-icon">🤖</div>
+                <h4 class="tech-project-title">Implementación de IA</h4>
+              </div>
+              <p class="tech-project-description">Aplica inteligencia artificial para agilizar procesos y reducir errores.</p>
+              <div class="tech-project-impact">🎯 Facilita tareas repetitivas y permite análisis avanzados en menor tiempo</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Panel desplegable para proyectos de Calidad -->
+        <div class="tech-projects-panel" id="calidad-projects-panel">
+          <div class="tech-projects-header">
+            <div class="tech-projects-title">
+              🔬 Calidad con Investigación
+              <span class="tech-projects-subtitle">Proyectos de Excelencia</span>
+            </div>
+          </div>
+          
+          <div class="tech-projects-grid">
+            <!-- LIMS para Control de Calidad -->
+            <div class="tech-project-item">
+              <div class="tech-project-status in-progress"></div>
+              <div class="tech-project-header">
+                <div class="tech-project-icon">🧪</div>
+                <h4 class="tech-project-title">LIMS para Control de Calidad</h4>
+              </div>
+              <p class="tech-project-description">Garantiza control y seguimiento preciso de procesos de laboratorio.</p>
+              <div class="tech-project-impact">⚡ Garantiza control riguroso y automatizado de procesos de laboratorio</div>
+            </div>
+            
+            <!-- Actualización de LabSolutions -->
+            <div class="tech-project-item">
+              <div class="tech-project-status in-progress"></div>
+              <div class="tech-project-header">
+                <div class="tech-project-icon">📊</div>
+                <h4 class="tech-project-title">Actualización de LabSolutions</h4>
+              </div>
+              <p class="tech-project-description">Mejora la exactitud y velocidad de análisis para mantener altos estándares de calidad.</p>
+              <div class="tech-project-impact">📈 Mejora velocidad y precisión en análisis y reportes</div>
+            </div>
+
+            <!-- Bach récord electrónico -->
+            <div class="tech-project-item">
+              <div class="tech-project-status in-progress"></div>
+              <div class="tech-project-header">
+                <div class="tech-project-icon">📋</div>
+                <h4 class="tech-project-title">Bach récord electrónico</h4>
+              </div>
+              <p class="tech-project-description">Digitaliza la trazabilidad y optimiza la gestión documental.</p>
+              <div class="tech-project-impact">📋 Optimiza trazabilidad y reduce tiempos en gestión documental</div>
+            </div>
+
+            <!-- Kaseya -->
+            <div class="tech-project-item">
+              <div class="tech-project-status in-progress"></div>
+              <div class="tech-project-header">
+                <div class="tech-project-icon">🖥️</div>
+                <h4 class="tech-project-title">Kaseya</h4>
+              </div>
+              <p class="tech-project-description">Monitoreo predictivo y gestión inteligente de equipos críticos.</p>
+              <div class="tech-project-impact">🔍 Proporciona control de calidad en tiempo real de equipos</div>
+            </div>
+
+            <!-- Implementación de IA -->
+            <div class="tech-project-item">
+              <div class="tech-project-status planned"></div>
+              <div class="tech-project-header">
+                <div class="tech-project-icon">🤖</div>
+                <h4 class="tech-project-title">Implementación de IA</h4>
+              </div>
+              <p class="tech-project-description">Aplica inteligencia artificial para agilizar procesos y reducir errores.</p>
+              <div class="tech-project-impact">🎯 Mejora la precisión y reduce errores en procesos de calidad</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Panel desplegable para proyectos de Innovación -->
+        <div class="tech-projects-panel" id="innovacion-projects-panel">
+          <div class="tech-projects-header">
+            <div class="tech-projects-title">
+              💡 Innovación
+              <span class="tech-projects-subtitle">Proyectos Disruptivos</span>
+            </div>
+          </div>
+          
+          <div class="tech-projects-grid">
+            <!-- Implementación de IA -->
+            <div class="tech-project-item">
+              <div class="tech-project-status planned"></div>
+              <div class="tech-project-header">
+                <div class="tech-project-icon">🤖</div>
+                <h4 class="tech-project-title">Implementación de IA</h4>
+              </div>
+              <p class="tech-project-description">Introduce soluciones automatizadas y análisis avanzados.</p>
+              <div class="tech-project-impact">🎯 Facilita tareas repetitivas y permite análisis avanzados en menor tiempo</div>
+            </div>
+            
+            <!-- LIMS para Control de Calidad -->
+            <div class="tech-project-item">
+              <div class="tech-project-status in-progress"></div>
+              <div class="tech-project-header">
+                <div class="tech-project-icon">🧪</div>
+                <h4 class="tech-project-title">LIMS para Control de Calidad</h4>
+              </div>
+              <p class="tech-project-description">Sistema digital que optimiza y automatiza procesos de laboratorio.</p>
+              <div class="tech-project-impact">⚡ Garantiza control riguroso y automatizado de procesos de laboratorio</div>
+            </div>
+
+            <!-- OptiSign -->
+            <div class="tech-project-item">
+              <div class="tech-project-status in-progress"></div>
+              <div class="tech-project-header">
+                <div class="tech-project-icon">📺</div>
+                <h4 class="tech-project-title">OptiSign</h4>
+              </div>
+              <p class="tech-project-description">Sistema de comunicación interna con pantallas digitales estratégicas.</p>
+              <div class="tech-project-impact">📢 Mejora la comunicación interna y reduce el uso de papel</div>
+            </div>
+
+            <!-- Kaseya -->
+            <div class="tech-project-item">
+              <div class="tech-project-status in-progress"></div>
+              <div class="tech-project-header">
+                <div class="tech-project-icon">🖥️</div>
+                <h4 class="tech-project-title">Kaseya</h4>
+              </div>
+              <p class="tech-project-description">Conecta equipos de planta para monitoreo y gestión en tiempo real.</p>
+              <div class="tech-project-impact">📊 Proporciona monitoreo predictivo y gestión inteligente de equipos</div>
+            </div>
+
+            <!-- LabSolutions -->
+            <div class="tech-project-item">
+              <div class="tech-project-status in-progress"></div>
+              <div class="tech-project-header">
+                <div class="tech-project-icon">🔬</div>
+                <h4 class="tech-project-title">LabSolutions</h4>
+              </div>
+              <p class="tech-project-description">Plataforma avanzada de análisis y gestión de datos.</p>
+              <div class="tech-project-impact">📈 Incrementa la eficiencia en análisis y gestión de datos</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Panel desplegable para proyectos de Sostenibilidad -->
+        <div class="tech-projects-panel" id="sostenibilidad-projects-panel">
+          <div class="tech-projects-header">
+            <div class="tech-projects-title">
+              🌱 Sostenibilidad
+              <span class="tech-projects-subtitle">Proyectos Verdes</span>
+            </div>
+          </div>
+          
+          <div class="tech-projects-grid">
+            <!-- Renovación de infraestructura -->
+            <div class="tech-project-item">
+              <div class="tech-project-status in-progress"></div>
+              <div class="tech-project-header">
+                <div class="tech-project-icon">🌐</div>
+                <h4 class="tech-project-title">Renovación de Infraestructura</h4>
+              </div>
+              <p class="tech-project-description">Optimiza consumo energético y recursos mediante tecnologías eficientes.</p>
+              <div class="tech-project-impact">🚀 Moderniza plataforma tecnológica para mayor estabilidad y seguridad</div>
+            </div>
+            
+            <!-- Bach récord electrónico -->
+            <div class="tech-project-item">
+              <div class="tech-project-status in-progress"></div>
+              <div class="tech-project-header">
+                <div class="tech-project-icon">📋</div>
+                <h4 class="tech-project-title">Bach récord electrónico</h4>
+              </div>
+              <p class="tech-project-description">Reduce el uso de papel y mejora la eficiencia documental.</p>
+              <div class="tech-project-impact">💡 Optimiza trazabilidad y reduce tiempos en gestión documental</div>
+            </div>
+
+            <!-- OptiSign -->
+            <div class="tech-project-item">
+              <div class="tech-project-status in-progress"></div>
+              <div class="tech-project-header">
+                <div class="tech-project-icon">📺</div>
+                <h4 class="tech-project-title">OptiSign</h4>
+              </div>
+              <p class="tech-project-description">Reduce el uso de papel y mejora la eficiencia documental.</p>
+              <div class="tech-project-impact">🌱 Reduce el uso de papel y mejora la eficiencia documental</div>
+            </div>
+
+            <!-- Implementación de IA -->
+            <div class="tech-project-item">
+              <div class="tech-project-status planned"></div>
+              <div class="tech-project-header">
+                <div class="tech-project-icon">🤖</div>
+                <h4 class="tech-project-title">Implementación de IA</h4>
+              </div>
+              <p class="tech-project-description">Optimiza procesos para reducir consumo energético y recursos.</p>
+              <div class="tech-project-impact">⚡ Optimiza procesos para reducir consumo energético y recursos</div>
+            </div>
+
+            <!-- Kaseya -->
+            <div class="tech-project-item">
+              <div class="tech-project-status in-progress"></div>
+              <div class="tech-project-header">
+                <div class="tech-project-icon">🖥️</div>
+                <h4 class="tech-project-title">Kaseya</h4>
+              </div>
+              <p class="tech-project-description">Monitoreo inteligente para optimizar el uso de recursos energéticos.</p>
+              <div class="tech-project-impact">🔋 Monitoreo inteligente para optimizar el uso de recursos energéticos</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================  PROYECTOS  ===================== -->
+  <section class="projects-section">
+    <div class="container">
+      <h2 class="section-title" style="color:#fff">Proyectos de Transformación Digital</h2>
+
+      <div class="project-grid">
+        <!-- Bach récord electrónico -->
+        <article class="project-card" data-tags="tecnología,sostenibilidad">
+          <div class="project-header">
+            <div class="project-icon">📋</div>
+            <div class="project-status in-progress">En Progreso</div>
+          </div>
+          <h3 class="project-title">Bach récord electrónico</h3>
+          <p class="project-description">Optimiza trazabilidad y reduce tiempos en la gestión documental.</p>
+
+          <div class="business-impact">
+            <div class="impact-title">💡 Beneficios Clave:</div>
+            <ul class="impact-list">
+              <li><strong>Mayor productividad</strong> en gestión documental</li>
+              <li><strong>Mejor disponibilidad</strong> de información</li>
+              <li><strong>Respuesta más ágil</strong> a requerimientos</li>
+              <li><strong>Procesos siempre operativos</strong></li>
+            </ul>
+          </div>
+
+          <div class="project-progress">
+            <div class="progress-label">
+              <span>Progreso General</span><span>En desarrollo</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+          </div>
+
+          <div class="project-pillars">
+            <span class="pillar-tag">Tecnología</span>
+            <span class="pillar-tag">Sostenibilidad</span>
+          </div>
+          
+          <button class="demo-button" onclick="openDemo('bach-record')">Ver Demo</button>
+        </article>
+
+        <!-- LIMS para Control de Calidad -->
+        <article class="project-card" data-tags="calidad,innovación">
+          <div class="project-header">
+            <div class="project-icon">🧪</div>
+            <div class="project-status in-progress">En Progreso</div>
+          </div>
+          <h3 class="project-title">LIMS para Control de Calidad</h3>
+          <p class="project-description">Garantiza control riguroso y automatizado de procesos de laboratorio.</p>
+
+          <div class="business-impact">
+            <div class="impact-title">⚡ Beneficios Clave:</div>
+            <ul class="impact-list">
+              <li><strong>Mayor precisión</strong> en análisis</li>
+              <li><strong>Mejor control</strong> de procesos</li>
+              <li><strong>Respuesta más rápida</strong> en resultados</li>
+              <li><strong>Equipos siempre operativos</strong></li>
+            </ul>
+          </div>
+
+          <div class="project-progress">
+            <div class="progress-label"><span>Progreso General</span><span>En desarrollo</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:45%"></div></div>
+          </div>
+
+          <div class="project-pillars">
+            <span class="pillar-tag">Calidad</span>
+            <span class="pillar-tag">Innovación</span>
+          </div>
+          
+          <button class="demo-button" onclick="openDemo('lims')">Ver Demo</button>
+        </article>
+
+        <!-- Renovación de Infraestructura -->
+        <article class="project-card" data-tags="tecnología,sostenibilidad">
+          <div class="project-header">
+            <div class="project-icon">🌐</div>
+            <div class="project-status in-progress">Fase 2</div>
+          </div>
+          <h3 class="project-title">Renovación de Infraestructura</h3>
+          <p class="project-description">Moderniza la plataforma tecnológica para mayor estabilidad y seguridad.</p>
+
+          <div class="business-impact">
+            <div class="impact-title">🚀 Beneficios Clave:</div>
+            <ul class="impact-list">
+              <li><strong>Mayor estabilidad</strong> operativa</li>
+              <li><strong>Mejor seguridad</strong> de datos</li>
+              <li><strong>Respuesta más rápida</strong> del sistema</li>
+              <li><strong>Equipos siempre operativos</strong></li>
+            </ul>
+          </div>
+
+          <div class="project-progress">
+            <div class="progress-label"><span>Progreso General</span><span>Fase 2</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:52%"></div></div>
+          </div>
+
+          <div class="project-pillars">
+            <span class="pillar-tag">Tecnología</span>
+            <span class="pillar-tag">Sostenibilidad</span>
+          </div>
+          
+          <button class="demo-button" onclick="openDemo('infraestructura')">Ver Demo</button>
+        </article>
+
+        <!-- Actualización de LabSolutions -->
+        <article class="project-card" data-tags="calidad,tecnología">
+          <div class="project-header">
+            <div class="project-icon">📊</div>
+            <div class="project-status in-progress">En Progreso</div>
+          </div>
+          <h3 class="project-title">Actualización de LabSolutions</h3>
+          <p class="project-description">Mejora velocidad y precisión en análisis y reportes.</p>
+
+          <div class="business-impact">
+            <div class="impact-title">📈 Beneficios Clave:</div>
+            <ul class="impact-list">
+              <li><strong>Mayor velocidad</strong> en análisis</li>
+              <li><strong>Mejor precisión</strong> en resultados</li>
+              <li><strong>Respuesta más rápida</strong> en reportes</li>
+              <li><strong>Procesos siempre operativos</strong></li>
+            </ul>
+          </div>
+
+          <div class="project-progress">
+            <div class="progress-label"><span>Progreso General</span><span>En progreso</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div>
+          </div>
+
+          <div class="project-pillars">
+            <span class="pillar-tag">Calidad</span>
+            <span class="pillar-tag">Tecnología</span>
+          </div>
+          
+          <button class="demo-button" onclick="openDemo('labsolutions')">Ver Demo</button>
+        </article>
+
+        <!-- Implementación de IA -->
+        <article class="project-card" data-tags="innovación,tecnología">
+          <div class="project-header">
+            <div class="project-icon">🤖</div>
+            <div class="project-status planned">Planificado</div>
+          </div>
+          <h3 class="project-title">Implementación de IA</h3>
+          <p class="project-description">Facilita tareas repetitivas y permite análisis avanzados en menor tiempo.</p>
+
+          <div class="business-impact">
+            <div class="impact-title">🎯 Beneficios Clave:</div>
+            <ul class="impact-list">
+              <li><strong>Mayor eficiencia</strong> en procesos</li>
+              <li><strong>Mejor análisis</strong> de datos</li>
+              <li><strong>Respuesta más inteligente</strong> a necesidades</li>
+              <li><strong>Sistemas siempre operativos</strong></li>
+            </ul>
+          </div>
+
+          <div class="project-progress">
+            <div class="progress-label"><span>Progreso General</span><span>Planificado</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:15%"></div></div>
+          </div>
+
+          <div class="project-pillars">
+            <span class="pillar-tag">Innovación</span>
+            <span class="pillar-tag">Tecnología</span>
+          </div>
+          
+          <button class="demo-button" onclick="openDemo('ia')">Ver Demo</button>
+        </article>
+
+        <!-- OptiSign -->
+        <article class="project-card" data-tags="tecnología,comunicación">
+          <div class="project-header">
+            <div class="project-icon">📺</div>
+            <div class="project-status in-progress">En Progreso</div>
+          </div>
+          <h3 class="project-title">OptiSign - Comunicación Digital</h3>
+          <p class="project-description">Sistema de comunicación interna con pantallas digitales estratégicas.</p>
+
+          <div class="business-impact">
+            <div class="impact-title">📺 Estado Actual:</div>
+            <ul class="impact-list">
+              <li><strong>Instalado:</strong> 1 televisor en planta</li>
+              <li><strong>Pendiente:</strong> 1 televisor en planta</li>
+              <li><strong>Próximo:</strong> 1 televisor en restaurante</li>
+              <li><strong>Capacitación:</strong> Gestión Humana completada</li>
+              <li><strong>Manual:</strong> Finalizado y disponible</li>
+            </ul>
+          </div>
+
+          <div class="project-progress">
+            <div class="progress-label"><span>Progreso General</span><span>En progreso</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div>
+          </div>
+
+          <div class="project-pillars">
+            <span class="pillar-tag">Tecnología</span>
+            <span class="pillar-tag">Comunicación</span>
+          </div>
+          
+          <button class="demo-button" onclick="openDemo('optisign')">Ver Demo</button>
+        </article>
+
+        <!-- Kaseya -->
+        <article class="project-card" data-tags="tecnología,monitoreo">
+          <div class="project-header">
+            <div class="project-icon">🖥️</div>
+            <div class="project-status in-progress">En Progreso</div>
+          </div>
+          <h3 class="project-title">Kaseya - Monitoreo de Equipos</h3>
+          <p class="project-description">Conecta equipos de planta para monitoreo y gestión en tiempo real.</p>
+
+          <div class="business-impact">
+            <div class="impact-title">🖥️ Estado Actual:</div>
+            <ul class="impact-list">
+              <li><strong>Conectadas:</strong> Todas las KTP</li>
+              <li><strong>Pendientes:</strong> Algunas conexiones próximas</li>
+              <li><strong>Faltan:</strong> Demás equipos por integrar</li>
+              <li><strong>Monitoreo:</strong> 24/7 activo</li>
+            </ul>
+          </div>
+
+          <div class="project-progress">
+            <div class="progress-label"><span>Progreso General</span><span>En progreso</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+          </div>
+
+          <div class="project-pillars">
+            <span class="pillar-tag">Tecnología</span>
+            <span class="pillar-tag">Calidad</span>
+          </div>
+          
+          <button class="demo-button" onclick="openDemo('kaseya')">Ver Demo</button>
+        </article>
+
+        <!-- Implementación de la Red y la Infraestructura en la Bodega de la Estrella -->
+        <article class="project-card" data-tags="tecnología,infraestructura">
+          <div class="project-header">
+            <div class="project-icon">🏭</div>
+            <div class="project-status completed">Completado</div>
+          </div>
+          <h3 class="project-title">Implementación de la Red y la Infraestructura en la Bodega de la Estrella</h3>
+          <p class="project-description">Despliegue completo de infraestructura tecnológica en la bodega para optimizar operaciones y conectividad.</p>
+
+          <div class="business-impact">
+            <div class="impact-title">🏭 Beneficios Clave:</div>
+            <ul class="impact-list">
+              <li><strong>Conectividad total</strong> en la bodega</li>
+              <li><strong>Mayor eficiencia</strong> operativa</li>
+              <li><strong>Mejor control</strong> de inventarios</li>
+              <li><strong>Operaciones siempre conectadas</strong></li>
+            </ul>
+          </div>
+
+          <div class="project-progress">
+            <div class="progress-label"><span>Progreso General</span><span>Completado</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+          </div>
+
+          <div class="project-pillars">
+            <span class="pillar-tag">Tecnología</span>
+            <span class="pillar-tag">Infraestructura</span>
+          </div>
+          
+          <button class="demo-button" onclick="openDemo('bodega-estrella')">Ver Demo</button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================  DEMOS INTERACTIVOS  ===================== -->
+  <section class="demo-section">
+    <div class="container">
+      <h2 class="section-title">Demos Interactivos - Avances en Tiempo Real</h2>
+
+      <!-- Selector de demos -->
+      <div class="demo-grid">
+        <div class="demo-card active" data-demo="kaseya">
+          <div class="demo-title">🖥️ Dashboard Kaseya</div>
+          <div class="demo-text">Monitoreo en tiempo real de equipos críticos con métricas y alertas predictivas.</div>
+        </div>
+        <div class="demo-card" data-demo="optisign">
+          <div class="demo-title">📺 Red OptiSign</div>
+          <div class="demo-text">Indicadores de comunicación interna, alcance y cumplimiento de programación.</div>
+        </div>
+        <div class="demo-card" data-demo="network">
+          <div class="demo-title">🌐 Mapa de Red</div>
+          <div class="demo-text">Cobertura Wi-Fi, puntos críticos y estado general de la infraestructura.</div>
+        </div>
+        <div class="demo-card" data-demo="bach-record">
+          <div class="demo-title">📋 Bach Record</div>
+          <div class="demo-text">Digitalización completa de la trazabilidad documental.</div>
+        </div>
+        <div class="demo-card" data-demo="lims">
+          <div class="demo-title">🧪 LIMS</div>
+          <div class="demo-text">Sistema integral de gestión de laboratorio.</div>
+        </div>
+        <div class="demo-card" data-demo="infraestructura">
+          <div class="demo-title">🏗️ Infraestructura</div>
+          <div class="demo-text">Modernización tecnológica integral.</div>
+        </div>
+        <div class="demo-card" data-demo="labsolutions">
+          <div class="demo-title">🔬 LabSolutions</div>
+          <div class="demo-text">Plataforma avanzada de análisis y gestión.</div>
+        </div>
+        <div class="demo-card" data-demo="ia">
+          <div class="demo-title">🤖 IA</div>
+          <div class="demo-text">Implementación de inteligencia artificial.</div>
+        </div>
+        <div class="demo-card" data-demo="bodega-estrella">
+          <div class="demo-title">🏭 Bodega Estrella</div>
+          <div class="demo-text">Infraestructura completa de red e implementación tecnológica.</div>
+        </div>
+      </div>
+
+      <!-- ====== KASEYA ====== -->
+      <div id="kaseya-dashboard" class="dashboard active">
+        <div class="dashboard-header">
+          <div class="dashboard-title">
+            Sistema Kaseya - Monitoreo 24/7
+            <span class="status-indicator" title="En línea"></span>
+          </div>
+          <div class="status-text">Última actualización: <span id="kaseya-updated">—</span></div>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi"><div class="value" id="kpi-uptime">98.7%</div><div class="label">Disponibilidad General</div></div>
+          <div class="kpi"><div class="value" id="kpi-connected">12</div><div class="label">Equipos Conectados</div></div>
+          <div class="kpi"><div class="value" id="kpi-critical">0</div><div class="label">Alertas Críticas</div></div>
+          <div class="kpi"><div class="value" id="kpi-hours">847</div><div class="label">Horas de Operación</div></div>
+        </div>
+
+        <div class="charts">
+          <div class="chart-card">
+            <div class="demo-visual-element">📈</div>
+            <div class="demo-status-indicator"></div>
+            <div class="demo-data-flow">FLUJO</div>
+            <div class="demo-performance-bar"></div>
+            <div class="chart-title">Uptime (últimas 24h)</div>
+            <canvas id="chartKaseyaLine"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="demo-visual-element">⚡</div>
+            <div class="demo-status-indicator"></div>
+            <div class="demo-data-flow">REND</div>
+            <div class="demo-performance-bar"></div>
+            <div class="chart-title">Rendimiento por Equipo (TPH)</div>
+            <canvas id="chartKaseyaBar"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="demo-visual-element">🚨</div>
+            <div class="demo-status-indicator"></div>
+            <div class="demo-data-flow">ALERT</div>
+            <div class="demo-performance-bar"></div>
+            <div class="chart-title">Alertas por Severidad</div>
+            <canvas id="chartKaseyaDonut"></canvas>
+          </div>
+        </div>
+
+        <div class="equipment-status">
+          <h4 style="color:hsl(var(--primary)); margin:12px 0 8px">Estado de Equipos Críticos</h4>
+          <div class="equipment-row"><span class="equip-name">Prexima 800B - Línea A</span><span class="equip-dot" data-tip="OK: rendimiento estable"></span></div>
+          <div class="equipment-row"><span class="equip-name">Kilian KTP 420x</span><span class="equip-dot warn" data-tip="Advertencia: vibración elevada"></span></div>
+          <div class="equipment-row"><span class="equip-name">Essica 1 - Control Principal</span><span class="equip-dot" data-tip="OK: temperatura dentro de rango"></span></div>
+          <div class="equipment-row"><span class="equip-name">Bombos Glatt - Mezclador</span><span class="equip-dot" data-tip="OK: carga nominal"></span></div>
+        </div>
+      </div>
+
+      <!-- ====== OPTISIGN ====== -->
+      <div id="optisign-dashboard" class="dashboard">
+        <div class="dashboard-header">
+          <div class="dashboard-title">
+            Red OptiSign - Comunicación Digital
+            <span class="status-indicator" title="En línea"></span>
+          </div>
+          <div class="status-text">Pantallas activas en toda la planta — actualización: <span id="optisign-updated">—</span></div>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi"><div class="value" id="opt-screens">8</div><div class="label">Pantallas Activas</div></div>
+          <div class="kpi"><div class="value">24/7</div><div class="label">Tiempo de Emisión</div></div>
+          <div class="kpi"><div class="value" id="opt-messages">15</div><div class="label">Mensajes Diarios</div></div>
+          <div class="kpi"><div class="value" id="opt-sync">100%</div><div class="label">Sincronización</div></div>
+        </div>
+
+        <div class="charts">
+          <div class="chart-card">
+            <div class="chart-title">Alcance por Zona</div>
+            <canvas id="chartOptBar"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Cumplimiento de Programación (7 días)</div>
+            <canvas id="chartOptLine"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Tipos de Contenido Emitido</div>
+            <canvas id="chartOptDonut"></canvas>
+          </div>
+        </div>
+
+        <div class="equipment-status">
+          <h4 style="color:hsl(var(--primary)); margin:12px 0 8px">Ubicaciones Estratégicas</h4>
+          <div class="equipment-row"><span class="equip-name">Lobby Principal</span><span class="equip-dot" data-tip="Pantalla activa"></span></div>
+          <div class="equipment-row"><span class="equip-name">Área de Producción</span><span class="equip-dot" data-tip="Pantalla activa"></span></div>
+          <div class="equipment-row"><span class="equip-name">Cafetería</span><span class="equip-dot" data-tip="Pantalla activa"></span></div>
+          <div class="equipment-row"><span class="equip-name">Centro de Control</span><span class="equip-dot" data-tip="Pantalla activa"></span></div>
+        </div>
+      </div>
+
+      <!-- ====== NETWORK ====== -->
+      <div id="network-dashboard" class="dashboard">
+        <div class="dashboard-header">
+          <div class="dashboard-title">
+            Infraestructura de Red - Estado General
+            <span class="status-indicator" title="En línea"></span>
+          </div>
+          <div class="status-text">Fase 2 — Implementación 52% completada — actualización: <span id="network-updated">—</span></div>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi"><div class="value" id="net-phase">52%</div><div class="label">Progreso Fase 2</div></div>
+          <div class="kpi"><div class="value" id="net-wifi">95%</div><div class="label">Cobertura Wi-Fi</div></div>
+          <div class="kpi"><div class="value" id="net-nodes">45</div><div class="label">Puntos de Red</div></div>
+          <div class="kpi"><div class="value" id="net-uptime">99.2%</div><div class="label">Uptime Actual</div></div>
+        </div>
+
+        <div class="charts">
+          <div class="chart-card">
+            <div class="chart-title">Tráfico por Segmento (Gbps)</div>
+            <canvas id="chartNetBar"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Latencia Promedio (ms)</div>
+            <canvas id="chartNetLine"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Estado de Enlaces</div>
+            <canvas id="chartNetDonut"></canvas>
+          </div>
+        </div>
+
+        <div class="equipment-status">
+          <h4 style="color:hsl(var(--primary)); margin:12px 0 8px">Zonas Críticas Conectadas</h4>
+          <div class="equipment-row"><span class="equip-name">Bodega La Estrella</span><span class="equip-dot" data-tip="OK"></span></div>
+          <div class="equipment-row"><span class="equip-name">Líneas de Producción</span><span class="equip-dot" data-tip="OK"></span></div>
+          <div class="equipment-row"><span class="equip-name">Centro de Datos</span><span class="equip-dot" data-tip="OK"></span></div>
+          <div class="equipment-row"><span class="equip-name">Áreas Administrativas</span><span class="equip-dot warn" data-tip="Advertencia: congestión"></span></div>
+        </div>
+      </div>
+
+      <!-- ====== BACH RECORD ====== -->
+      <div id="bach-record-dashboard" class="dashboard">
+        <div class="dashboard-header">
+          <div class="dashboard-title">
+            Bach Record Electrónico - Trazabilidad Digital
+            <span class="status-indicator" title="En línea"></span>
+          </div>
+          <div class="status-text">Digitalización completa — actualización: <span id="bach-record-updated">—</span></div>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi"><div class="value">100%</div><div class="label">Digitalizado</div></div>
+          <div class="kpi"><div class="value">24/7</div><div class="label">Disponible</div></div>
+          <div class="kpi"><div class="value">0</div><div class="label">Pérdidas</div></div>
+          <div class="kpi"><div class="value">+60%</div><div class="label">Eficiencia</div></div>
+        </div>
+
+        <div class="charts">
+          <div class="chart-card">
+            <div class="chart-title">Documentos Procesados (últimos 30 días)</div>
+            <canvas id="chartBachRecordLine"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Tiempo de Procesamiento</div>
+            <canvas id="chartBachRecordBar"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Tipos de Documentos</div>
+            <canvas id="chartBachRecordDonut"></canvas>
+          </div>
+        </div>
+
+        <div class="equipment-status">
+          <h4 style="color:hsl(var(--primary)); margin:12px 0 8px">Flujo de Documentos</h4>
+          <div class="equipment-row"><span class="equip-name">Creación Digital</span><span class="equip-dot" data-tip="OK: documentos generados automáticamente"></span></div>
+          <div class="equipment-row"><span class="equip-name">Validación</span><span class="equip-dot" data-tip="OK: control de calidad automatizado"></span></div>
+          <div class="equipment-row"><span class="equip-name">Almacenamiento</span><span class="equip-dot" data-tip="OK: base de datos segura"></span></div>
+          <div class="equipment-row"><span class="equip-name">Trazabilidad</span><span class="equip-dot" data-tip="OK: auditoría completa"></span></div>
+        </div>
+      </div>
+
+      <!-- ====== LIMS ====== -->
+      <div id="lims-dashboard" class="dashboard">
+        <div class="dashboard-header">
+          <div class="dashboard-title">
+            LIMS - Control de Calidad
+            <span class="status-indicator" title="En línea"></span>
+          </div>
+          <div class="status-text">Sistema integral de gestión — actualización: <span id="lims-updated">—</span></div>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi"><div class="value">98.5%</div><div class="label">Eficiencia</div></div>
+          <div class="kpi"><div class="value">99.9%</div><div class="label">Precisión</div></div>
+          <div class="kpi"><div class="value">+45%</div><div class="label">Productividad</div></div>
+          <div class="kpi"><div class="value">0</div><div class="label">Errores</div></div>
+        </div>
+
+        <div class="charts">
+          <div class="chart-card">
+            <div class="chart-title">Muestras Procesadas (últimas 24h)</div>
+            <canvas id="chartLimsLine"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Tiempo de Análisis</div>
+            <canvas id="chartLimsBar"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Tipos de Análisis</div>
+            <canvas id="chartLimsDonut"></canvas>
+          </div>
+        </div>
+
+        <div class="equipment-status">
+          <h4 style="color:hsl(var(--primary)); margin:12px 0 8px">Proceso de Laboratorio</h4>
+          <div class="equipment-row"><span class="equip-name">Recepción de Muestras</span><span class="equip-dot" data-tip="OK: proceso automatizado"></span></div>
+          <div class="equipment-row"><span class="equip-name">Análisis Automatizado</span><span class="equip-dot" data-tip="OK: precisión garantizada"></span></div>
+          <div class="equipment-row"><span class="equip-name">Validación de Resultados</span><span class="equip-dot" data-tip="OK: control de calidad"></span></div>
+          <div class="equipment-row"><span class="equip-name">Reporte Digital</span><span class="equip-dot" data-tip="OK: entrega inmediata"></span></div>
+        </div>
+      </div>
+
+      <!-- ====== INFRAESTRUCTURA ====== -->
+      <div id="infraestructura-dashboard" class="dashboard">
+        <div class="dashboard-header">
+          <div class="dashboard-title">
+            Renovación de Infraestructura - Estado General
+            <span class="status-indicator" title="En línea"></span>
+          </div>
+          <div class="status-text">Modernización tecnológica — actualización: <span id="infraestructura-updated">—</span></div>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi"><div class="value">99.9%</div><div class="label">Uptime</div></div>
+          <div class="kpi"><div class="value">1Gbps</div><div class="label">Velocidad Red</div></div>
+          <div class="kpi"><div class="value">24/7</div><div class="label">Monitoreo</div></div>
+          <div class="kpi"><div class="value">10TB</div><div class="label">Almacenamiento</div></div>
+        </div>
+
+        <div class="charts">
+          <div class="chart-card">
+            <div class="chart-title">Rendimiento del Sistema</div>
+            <canvas id="chartInfraestructuraBar"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Uso de Recursos</div>
+            <canvas id="chartInfraestructuraLine"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Estado de Componentes</div>
+            <canvas id="chartInfraestructuraDonut"></canvas>
+          </div>
+        </div>
+
+        <div class="equipment-status">
+          <h4 style="color:hsl(var(--primary)); margin:12px 0 8px">Componentes Críticos</h4>
+          <div class="equipment-row"><span class="equip-name">Servidores</span><span class="equip-dot" data-tip="OK: operativo"></span></div>
+          <div class="equipment-row"><span class="equip-name">Red</span><span class="equip-dot" data-tip="OK: conectado"></span></div>
+          <div class="equipment-row"><span class="equip-name">Seguridad</span><span class="equip-dot" data-tip="OK: protegido"></span></div>
+          <div class="equipment-row"><span class="equip-name">Almacenamiento</span><span class="equip-dot" data-tip="OK: disponible"></span></div>
+        </div>
+      </div>
+
+      <!-- ====== LABSOLUTIONS ====== -->
+      <div id="labsolutions-dashboard" class="dashboard">
+        <div class="dashboard-header">
+          <div class="dashboard-title">
+            LabSolutions - Análisis Avanzado
+            <span class="status-indicator" title="En línea"></span>
+          </div>
+          <div class="status-text">Plataforma de análisis — actualización: <span id="labsolutions-updated">—</span></div>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi"><div class="value">+60%</div><div class="label">Velocidad</div></div>
+          <div class="kpi"><div class="value">99.9%</div><div class="label">Precisión</div></div>
+          <div class="kpi"><div class="value">+40%</div><div class="label">Eficiencia</div></div>
+          <div class="kpi"><div class="value">24/7</div><div class="label">Disponibilidad</div></div>
+        </div>
+
+        <div class="charts">
+          <div class="chart-card">
+            <div class="chart-title">Análisis Realizados (últimas 24h)</div>
+            <canvas id="chartLabSolutionsLine"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Tiempo de Respuesta</div>
+            <canvas id="chartLabSolutionsBar"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Tipos de Análisis</div>
+            <canvas id="chartLabSolutionsDonut"></canvas>
+          </div>
+        </div>
+
+        <div class="equipment-status">
+          <h4 style="color:hsl(var(--primary)); margin:12px 0 8px">Funcionalidades Activas</h4>
+          <div class="equipment-row"><span class="equip-name">Análisis en Tiempo Real</span><span class="equip-dot" data-tip="OK: funcionando"></span></div>
+          <div class="equipment-row"><span class="equip-name">Reportes Automatizados</span><span class="equip-dot" data-tip="OK: activo"></span></div>
+          <div class="equipment-row"><span class="equip-name">Configuración Avanzada</span><span class="equip-dot" data-tip="OK: disponible"></span></div>
+          <div class="equipment-row"><span class="equip-name">Integración de Datos</span><span class="equip-dot" data-tip="OK: conectado"></span></div>
+        </div>
+      </div>
+
+      <!-- ====== IA ====== -->
+      <div id="ia-dashboard" class="dashboard">
+        <div class="dashboard-header">
+          <div class="dashboard-title">
+            Implementación de IA - Inteligencia Artificial
+            <span class="status-indicator" title="En desarrollo"></span>
+          </div>
+          <div class="status-text">Fase de implementación — actualización: <span id="ia-updated">—</span></div>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi"><div class="value">85%</div><div class="label">Implementación</div></div>
+          <div class="kpi"><div class="value">+70%</div><div class="label">Eficiencia</div></div>
+          <div class="kpi"><div class="value">-50%</div><div class="label">Tiempo</div></div>
+          <div class="kpi"><div class="value">99%</div><div class="label">Precisión</div></div>
+        </div>
+
+        <div class="charts">
+          <div class="chart-card">
+            <div class="chart-title">Procesos Automatizados</div>
+            <canvas id="chartIALine"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Análisis Predictivo</div>
+            <canvas id="chartIABar"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Tipos de IA</div>
+            <canvas id="chartIADonut"></canvas>
+          </div>
+        </div>
+
+        <div class="equipment-status">
+          <h4 style="color:hsl(var(--primary)); margin:12px 0 8px">Módulos de IA</h4>
+          <div class="equipment-row"><span class="equip-name">Análisis Predictivo</span><span class="equip-dot" data-tip="OK: activo"></span></div>
+          <div class="equipment-row"><span class="equip-name">Automatización</span><span class="equip-dot" data-tip="OK: funcionando"></span></div>
+          <div class="equipment-row"><span class="equip-name">Machine Learning</span><span class="equip-dot" data-tip="En desarrollo"></span></div>
+          <div class="equipment-row"><span class="equip-name">Optimización</span><span class="equip-dot" data-tip="OK: activo"></span></div>
+        </div>
+      </div>
+
+      <!-- ====== BODEGA ESTRELLA ====== -->
+      <div id="bodega-estrella-dashboard" class="dashboard">
+        <div class="dashboard-header">
+          <div class="dashboard-title">
+            Bodega de la Estrella - Infraestructura Completa
+            <span class="status-indicator" title="Completado"></span>
+          </div>
+          <div class="status-text">Proyecto finalizado — actualización: <span id="bodega-estrella-updated">—</span></div>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi"><div class="value">100%</div><div class="label">Cobertura</div></div>
+          <div class="kpi"><div class="value">+85%</div><div class="label">Eficiencia</div></div>
+          <div class="kpi"><div class="value">24/7</div><div class="label">Disponibilidad</div></div>
+          <div class="kpi"><div class="value">99.9%</div><div class="label">Uptime</div></div>
+        </div>
+
+        <div class="charts">
+          <div class="chart-card">
+            <div class="demo-visual-element">📊</div>
+            <div class="demo-status-indicator"></div>
+            <div class="demo-data-flow">RED</div>
+            <div class="demo-performance-bar"></div>
+            <div class="chart-title">Cobertura de Red</div>
+            <canvas id="chartBodegaEstrellaLine"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="demo-visual-element">🔗</div>
+            <div class="demo-status-indicator"></div>
+            <div class="demo-data-flow">EQUIP</div>
+            <div class="demo-performance-bar"></div>
+            <div class="chart-title">Equipos Conectados</div>
+            <canvas id="chartBodegaEstrellaBar"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="demo-visual-element">🏗️</div>
+            <div class="demo-status-indicator"></div>
+            <div class="demo-data-flow">INFRA</div>
+            <div class="demo-performance-bar"></div>
+            <div class="chart-title">Tipos de Infraestructura</div>
+            <canvas id="chartBodegaEstrellaDonut"></canvas>
+          </div>
+        </div>
+
+        <div class="equipment-status">
+          <h4 style="color:hsl(var(--primary)); margin:12px 0 8px">Componentes Instalados</h4>
+          <div class="equipment-row"><span class="equip-name">Red Wi-Fi Industrial</span><span class="equip-dot" data-tip="OK: activo"></span></div>
+          <div class="equipment-row"><span class="equip-name">Switches de Red</span><span class="equip-dot" data-tip="OK: funcionando"></span></div>
+          <div class="equipment-row"><span class="equip-name">Sistema de Seguridad</span><span class="equip-dot" data-tip="OK: activo"></span></div>
+          <div class="equipment-row"><span class="equip-name">Monitoreo Remoto</span><span class="equip-dot" data-tip="OK: conectado"></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================  VISIÓN FUTURA  ===================== -->
+  <section class="future-section">
+    <div class="container">
+      <div class="future-content">
+        <h2 class="future-title">Visión 2030: Liderazgo Biotecnológico</h2>
+        <p class="future-description">
+          Con esta transformación digital, Laboratorios Laproff no solo optimiza procesos actuales, sino que se posiciona como pionero en la convergencia de biotecnología, inteligencia artificial y responsabilidad social. Cada tecnología implementada se convierte en un catalizador que fortalece nuestra misión de contribuir al bienestar comunitario, mientras construimos el futuro de la industria farmacéutica latinoamericana.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- =====================  FRASE INSPIRADORA  ===================== -->
+  <section class="inspiration-section">
+    <div class="container">
+      <div class="inspiration-content">
+        <h2 class="inspiration-title">
+          "En LaProff creemos en un futuro donde la tecnología no solo impulsa el presente, sino que nos convierte en pioneros a nivel Colombia e internacionales en la adopción de nuevas soluciones que transforman vidas."
+        </h2>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================  SCRIPTS DE INTERACCIÓN + DEMOS  ===================== -->
+  <script>
+    // ------------------ Utilidades ------------------
+    const $ = (q,ctx=document)=>ctx.querySelector(q);
+    const $$ = (q,ctx=document)=>[...ctx.querySelectorAll(q)];
+    const fmtTime = ()=> new Date().toLocaleTimeString();
+
+    // ------------------ Animaciones de aparición ------------------
+    const observer = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.style.opacity='1';
+          e.target.style.transform='translateY(0)';
+          observer.unobserve(e.target);
+        }
+      })
+    },{threshold:.16});
+    $$('.pillar-card, .project-card, .demo-card').forEach(el=>{
+      el.style.opacity='0'; el.style.transform='translateY(14px)'; el.style.transition='all .5s ease';
+      observer.observe(el);
+    });
+
+    // ------------------ Interactividad de Pilares Corporativos ------------------
+    const panels = {
+      tecnologia: $('#tech-projects-panel'),
+      calidad: $('#calidad-projects-panel'),
+      innovacion: $('#innovacion-projects-panel'),
+      sostenibilidad: $('#sostenibilidad-projects-panel')
+    };
+    
+    let currentOpenPanel = null;
+    
+    $$('.pillar-card').forEach(card=>{
+      card.addEventListener('click', ()=>{
+        const key = card.dataset.pillar;
+        const panel = panels[key];
+        
+        if(panel) {
+          if(currentOpenPanel === key) {
+            // Cerrar panel actual
+            card.classList.remove('active');
+            panel.classList.remove('active');
+            currentOpenPanel = null;
+          } else {
+            // Cerrar panel anterior si existe
+            if(currentOpenPanel) {
+              $$('.pillar-card').forEach(c=>c.classList.remove('active'));
+              panels[currentOpenPanel].classList.remove('active');
+            }
+            
+            // Abrir nuevo panel
+            card.classList.add('active');
+            panel.classList.add('active');
+            currentOpenPanel = key;
+            
+            // Animar entrada de proyectos
+            $$('.tech-project-item', panel).forEach((item, index) => {
+              item.style.opacity = '0';
+              item.style.transform = 'translateY(20px)';
+              setTimeout(() => {
+                item.style.transition = 'all 0.4s ease';
+                item.style.opacity = '1';
+                item.style.transform = 'translateY(0)';
+              }, index * 100);
+            });
+          }
+        } else {
+          // Para pilares sin panel, mantener comportamiento original
+          $$('.pillar-card').forEach(c=>c.classList.remove('active'));
+          card.classList.add('active');
+          
+          // Cerrar panel si está abierto
+          if(currentOpenPanel) {
+            panels[currentOpenPanel].classList.remove('active');
+            currentOpenPanel = null;
+          }
+          
+          // Filtro visual de proyectos
+          $$('.project-card').forEach(p=>{
+            const tags = (p.dataset.tags||'').toLowerCase();
+            if(
+              (key==='calidad'        && tags.includes('calidad')) ||
+              (key==='innovacion'     && tags.includes('innovación')) ||
+              (key==='sostenibilidad' && tags.includes('sostenibilidad'))
+            ){
+              p.style.borderColor = 'hsl(var(--primary) / 0.6)';
+              p.style.transform = 'scale(1.01)';
+            }else{
+              p.style.borderColor = 'transparent';
+              p.style.transform = 'scale(1)';
+            }
+          });
+        }
+      });
+    });
+    
+    // Interactividad adicional para proyectos tecnológicos
+    $$('.tech-project-item').forEach(item => {
+      item.addEventListener('click', () => {
+        // Efecto de click con ripple
+        const ripple = document.createElement('div');
+        ripple.style.position = 'absolute';
+        ripple.style.borderRadius = '50%';
+        ripple.style.background = 'hsl(var(--primary) / 0.3)';
+        ripple.style.transform = 'scale(0)';
+        ripple.style.animation = 'ripple 0.6s linear';
+        ripple.style.left = '50%';
+        ripple.style.top = '50%';
+        ripple.style.width = '20px';
+        ripple.style.height = '20px';
+        ripple.style.marginLeft = '-10px';
+        ripple.style.marginTop = '-10px';
+        ripple.style.pointerEvents = 'none';
+        
+        item.style.position = 'relative';
+        item.appendChild(ripple);
+        
+        setTimeout(() => {
+          ripple.remove();
+        }, 600);
+      });
+    });
+    
+    // Cerrar panel al hacer clic fuera de él
+    document.addEventListener('click', (e) => {
+      if (currentOpenPanel) {
+        const currentCard = $(`.pillar-card[data-pillar="${currentOpenPanel}"]`);
+        const currentPanel = panels[currentOpenPanel];
+        const isClickInsidePanel = currentPanel.contains(e.target);
+        const isClickOnCard = currentCard.contains(e.target);
+        
+        if (!isClickInsidePanel && !isClickOnCard) {
+          currentCard.classList.remove('active');
+          currentPanel.classList.remove('active');
+          currentOpenPanel = null;
+        }
+      }
+    });
+    
+    // Cerrar panel con tecla Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && currentOpenPanel) {
+        $(`.pillar-card[data-pillar="${currentOpenPanel}"]`).classList.remove('active');
+        panels[currentOpenPanel].classList.remove('active');
+        currentOpenPanel = null;
+      }
+    });
+    
+    // Función para cambiar logos
+    function changeLogo(type, input) {
+      const file = input.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const container = document.getElementById(`${type}-logo-container`);
+          const svg = container.querySelector('svg');
+          
+          // Crear nueva imagen con mejor styling
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          img.style.cssText = `
+            width: ${type === 'laproff' ? '128px' : '96px'};
+            height: ${type === 'laproff' ? '128px' : '96px'};
+            object-fit: contain;
+            border-radius: ${type === 'laproff' ? '0' : '8px'};
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+            transition: all 0.3s ease;
+          `;
+          
+          // Remover imagen anterior si existe
+          const existingImg = container.querySelector('img');
+          if (existingImg) {
+            existingImg.remove();
+          }
+          
+          // Reemplazar SVG con imagen
+          svg.style.display = 'none';
+          container.insertBefore(img, svg);
+          
+          // Mostrar notificación
+          showNotification(`Logo ${type === 'laproff' ? 'Laproff' : 'Prototipado'} actualizado exitosamente`);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Función para mostrar notificaciones
+    function showNotification(message) {
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: hsl(var(--primary));
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 1000;
+        font-size: 14px;
+        font-weight: 500;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+      `;
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      
+      // Animar entrada
+      setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+      }, 100);
+      
+      // Remover después de 3 segundos
+      setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+          document.body.removeChild(notification);
+        }, 300);
+      }, 3000);
+    }
+
+    // Función para abrir demos
+    function openDemo(demoType) {
+      // Mapeo de tipos de demo a IDs de dashboard
+      const demoMapping = {
+        'bach-record': 'bach-record',
+        'lims': 'lims',
+        'infraestructura': 'infraestructura',
+        'labsolutions': 'labsolutions',
+        'ia': 'ia',
+        'kaseya': 'kaseya',
+        'optisign': 'optisign',
+        'network': 'network',
+        'bodega-estrella': 'bodega-estrella'
+      };
+      
+      const demoId = demoMapping[demoType];
+      if (demoId) {
+        // Scroll suave a la sección de demos
+        document.querySelector('.demo-section').scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+        
+        // Cambiar al dashboard correspondiente después de un pequeño delay
+        setTimeout(() => {
+          switchDemo(demoId);
+        }, 500);
+      }
+    }
+    
+
+
+    // ------------------ Navegación de demos ------------------
+    let currentDemo = 'kaseya';
+    const switchDemo = (type)=>{
+      currentDemo = type;
+      $$('.demo-card').forEach(c=>c.classList.remove('active'));
+      $(`.demo-card[data-demo="${type}"]`)?.classList.add('active');
+      $$('.dashboard').forEach(d=>d.classList.remove('active'));
+      $(`#${type}-dashboard`)?.classList.add('active');
+    };
+    $$('.demo-card').forEach(card=>{
+      card.addEventListener('click', ()=> switchDemo(card.dataset.demo));
+    });
+    document.addEventListener('keydown', e=>{
+      if(!['ArrowLeft','ArrowRight'].includes(e.key)) return;
+      const demos = ['kaseya','optisign','network','bach-record','lims','infraestructura','labsolutions','ia','bodega-estrella'];
+      const idx = demos.indexOf(currentDemo);
+      const next = e.key==='ArrowLeft' ? (idx>0?idx-1:demos.length-1) : (idx<demos.length-1?idx+1:0);
+      switchDemo(demos[next]);
+    });
+
+    // ------------------ CHART HELPERS ------------------
+    Chart.defaults.font.family = "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+    Chart.defaults.color = 'hsl(var(--foreground))';
+    
+    // Laproff color palette for charts
+    const chartColors = {
+      primary: '#0097A6',
+      secondary: '#353591',
+      accent: '#AFDBDE',
+      success: '#9ECB3A',
+      warning: '#FFE627',
+      destructive: '#F16688',
+      muted: '#A8A9AD',
+      compAzul: '#00B7EE',
+      compVioleta: '#806CB0',
+      compNaranja: '#FCB547'
+    };
+    
+    const mkLine = (id, labels, data, tension=.35)=> new Chart(id.getContext('2d'), {
+      type:'line',
+      data:{ 
+        labels, 
+        datasets:[{ 
+          data, 
+          fill:false, 
+          borderWidth:2, 
+          pointRadius:2,
+          borderColor: chartColors.primary,
+          backgroundColor: chartColors.primary,
+          pointBackgroundColor: chartColors.primary,
+          pointBorderColor: chartColors.primary
+        }]
+      },
+      options:{ 
+        responsive:true, 
+        plugins:{ 
+          legend:{display:false}, 
+          tooltip:{mode:'index', intersect:false}
+        },
+        elements:{ line:{ tension }}, 
+        scales:{ 
+          x:{ 
+            grid:{ color:'hsl(var(--foreground) / 0.1)' },
+            ticks: { color: 'hsl(var(--foreground))' }
+          }, 
+          y:{ 
+            grid:{ color:'hsl(var(--foreground) / 0.1)' },
+            ticks: { color: 'hsl(var(--foreground))' }
+          } 
+        } 
+      }
+    });
+    const mkBar = (id, labels, data)=> new Chart(id.getContext('2d'), {
+      type:'bar',
+      data:{ 
+        labels, 
+        datasets:[{ 
+          data, 
+          borderWidth:0,
+          backgroundColor: chartColors.primary,
+          borderColor: chartColors.primary
+        }] 
+      },
+      options:{ 
+        responsive:true, 
+        plugins:{ legend:{display:false} },
+        scales:{ 
+          x:{ 
+            grid:{ display:false },
+            ticks: { color: 'hsl(var(--foreground))' }
+          }, 
+          y:{ 
+            grid:{ color:'hsl(var(--foreground) / 0.1)' },
+            ticks: { color: 'hsl(var(--foreground))' }
+          } 
+        } 
+      }
+    });
+    const mkDonut = (id, labels, data)=> new Chart(id.getContext('2d'), {
+      type:'doughnut',
+      data:{ 
+        labels, 
+        datasets:[{ 
+          data, 
+          borderWidth:0,
+          backgroundColor: [chartColors.primary, chartColors.secondary, chartColors.accent, chartColors.success, chartColors.warning, chartColors.compAzul, chartColors.compVioleta, chartColors.compNaranja],
+          borderColor: [chartColors.primary, chartColors.secondary, chartColors.accent, chartColors.success, chartColors.warning, chartColors.compAzul, chartColors.compVioleta, chartColors.compNaranja]
+        }] 
+      },
+      options:{ 
+        responsive:true, 
+        plugins:{ 
+          legend:{
+            position:'bottom',
+            labels: {
+              color: 'hsl(var(--foreground))',
+              padding: 10,
+              usePointStyle: true
+            }
+          } 
+        }, 
+        cutout:'62%' 
+      }
+    });
+
+    // ------------------ KASEYA CHARTS ------------------
+    const kaseyaLine = mkLine($('#chartKaseyaLine'),
+      Array.from({length:12}, (_,i)=> `${i*2}h`),
+      [99.2,99.0,98.7,99.1,99.0,98.9,99.3,99.1,98.8,99.2,98.9,99.1]
+    );
+    const kaseyaBar = mkBar($('#chartKaseyaBar'),
+      ['Prexima','Kilian','Essica 1','Glatt'],
+      [120, 105, 98, 112]
+    );
+    const kaseyaDonut = mkDonut($('#chartKaseyaDonut'),
+      ['Críticas','Mayores','Menores'],
+      [0, 2, 8]
+    );
+
+    // ------------------ OPTISIGN CHARTS ------------------
+    const optBar = mkBar($('#chartOptBar'),
+      ['Lobby','Producción','Cafetería','Control'],
+      [320, 560, 280, 410]
+    );
+    const optLine = mkLine($('#chartOptLine'),
+      ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'],
+      [98, 96, 99, 97, 100, 99, 98], .3
+    );
+    const optDonut = mkDonut($('#chartOptDonut'),
+      ['Anuncios','KPI','Cultura','Alertas'],
+      [45, 30, 18, 7]
+    );
+
+    // ------------------ NETWORK CHARTS ------------------
+    const netBar = mkBar($('#chartNetBar'),
+      ['Core','DMZ','Prod','Admin','Bodega'],
+      [8.2, 4.7, 6.5, 3.1, 2.8]
+    );
+    const netLine = mkLine($('#chartNetLine'),
+      ['00h','04h','08h','12h','16h','20h'],
+      [12, 14, 18, 22, 16, 13], .25
+    );
+    const netDonut = mkDonut($('#chartNetDonut'),
+      ['Up','Degradado','Down'],
+      [92, 6, 2]
+    );
+
+    // ------------------ BACH RECORD CHARTS ------------------
+    const bachRecordLine = mkLine($('#chartBachRecordLine'),
+      Array.from({length:30}, (_,i)=> `${i+1}`),
+      Array.from({length:30}, (_,i)=> Math.floor(Math.random() * 50) + 100)
+    );
+    const bachRecordBar = mkBar($('#chartBachRecordBar'),
+      ['Creación','Validación','Almacenamiento','Trazabilidad'],
+      [2.3, 1.8, 0.5, 0.2]
+    );
+    const bachRecordDonut = mkDonut($('#chartBachRecordDonut'),
+      ['Certificados','Reportes','Protocolos','Otros'],
+      [45, 30, 20, 5]
+    );
+
+    // ------------------ LIMS CHARTS ------------------
+    const limsLine = mkLine($('#chartLimsLine'),
+      Array.from({length:24}, (_,i)=> `${i}h`),
+      Array.from({length:24}, (_,i)=> Math.floor(Math.random() * 20) + 80)
+    );
+    const limsBar = mkBar($('#chartLimsBar'),
+      ['Recepción','Análisis','Validación','Reporte'],
+      [15, 45, 25, 5]
+    );
+    const limsDonut = mkDonut($('#chartLimsDonut'),
+      ['Químico','Microbiológico','Físico','Otros'],
+      [40, 35, 20, 5]
+    );
+
+    // ------------------ INFRAESTRUCTURA CHARTS ------------------
+    const infraestructuraBar = mkBar($('#chartInfraestructuraBar'),
+      ['CPU','RAM','Disco','Red'],
+      [85, 92, 78, 95]
+    );
+    const infraestructuraLine = mkLine($('#chartInfraestructuraLine'),
+      ['00h','06h','12h','18h','24h'],
+      [75, 82, 88, 85, 80], .3
+    );
+    const infraestructuraDonut = mkDonut($('#chartInfraestructuraDonut'),
+      ['Operativo','Mantenimiento','Crítico'],
+      [85, 12, 3]
+    );
+
+    // ------------------ LABSOLUTIONS CHARTS ------------------
+    const labSolutionsLine = mkLine($('#chartLabSolutionsLine'),
+      Array.from({length:24}, (_,i)=> `${i}h`),
+      Array.from({length:24}, (_,i)=> Math.floor(Math.random() * 30) + 50)
+    );
+    const labSolutionsBar = mkBar($('#chartLabSolutionsBar'),
+      ['Análisis','Reportes','Configuración','Integración'],
+      [1.2, 0.8, 2.1, 0.5]
+    );
+    const labSolutionsDonut = mkDonut($('#chartLabSolutionsDonut'),
+      ['Químico','Biológico','Físico','Estadístico'],
+      [35, 30, 25, 10]
+    );
+
+    // ------------------ IA CHARTS ------------------
+    const iaLine = mkLine($('#chartIALine'),
+      ['Ene','Feb','Mar','Abr','May','Jun'],
+      [65, 72, 78, 82, 85, 87]
+    );
+    const iaBar = mkBar($('#chartIABar'),
+      ['Predicción','Automatización','Optimización','ML'],
+      [92, 88, 95, 78]
+    );
+    const iaDonut = mkDonut($('#chartIADonut'),
+      ['Análisis','Automatización','Predicción','Otros'],
+      [40, 35, 20, 5]
+    );
+
+    // Charts para Bodega Estrella
+    const bodegaEstrellaLine = mkLine($('#chartBodegaEstrellaLine'),
+      ['Ene','Feb','Mar','Abr','May','Jun'],
+      [85, 90, 95, 98, 100, 100]
+    );
+    const bodegaEstrellaBar = mkBar($('#chartBodegaEstrellaBar'),
+      ['Wi-Fi','Switches','Seguridad','Monitoreo'],
+      [100, 100, 100, 100]
+    );
+    const bodegaEstrellaDonut = mkDonut($('#chartBodegaEstrellaDonut'),
+      ['Red Industrial','Equipos','Seguridad','Otros'],
+      [45, 35, 15, 5]
+    );
+
+    // ------------------ Simulación de datos en tiempo real ------------------
+    let eqConnected = 12, uptime = 98.7, hours = 847, critical=0;
+    let optScreens=8, optMsgs=15, optSync=100;
+    let netPhase=52, netWifi=95, netNodes=45, netUptime=99.2;
+    
+    // Variables para nuevos dashboards
+    let bachRecordDocs = 1250, bachRecordEfficiency = 100;
+    let limsSamples = 95, limsEfficiency = 98.5;
+    let infraUptime = 99.9, infraPerformance = 85;
+    let labSolutionsSpeed = 60, labSolutionsPrecision = 99.9;
+    let iaImplementation = 85, iaEfficiency = 70;
+    let bodegaEstrellaCoverage = 100, bodegaEstrellaEfficiency = 85;
+
+    const clamp=(v,min,max)=>Math.min(max,Math.max(min,v));
+    const rnd=(min,max)=>Math.random()*(max-min)+min;
+
+    const tick = ()=>{
+      // KASEYA
+      uptime = clamp(uptime + (Math.random()>.5? .1:-.1), 97.8, 99.6);
+      eqConnected = clamp(eqConnected + (Math.random()>.5? 1:-1), 10, 16);
+      hours += 1;
+      critical = Math.random()>.94 ? 1 : 0;
+
+      $('#kpi-uptime').textContent = uptime.toFixed(1)+'%';
+      $('#kpi-connected').textContent = Math.round(eqConnected);
+      $('#kpi-hours').textContent = hours;
+      $('#kpi-critical').textContent = critical;
+
+      kaseyaLine.data.datasets[0].data.shift();
+      kaseyaLine.data.datasets[0].data.push(uptime.toFixed(1));
+      kaseyaLine.update('none');
+
+      const perf = kaseyaBar.data.datasets[0].data.map(v=> clamp(v + (Math.random()>.5? rnd(-4,6):rnd(-6,4)), 80, 140));
+      kaseyaBar.data.datasets[0].data = perf; kaseyaBar.update('none');
+
+      const sev = [
+        critical, // críticas
+        clamp(Math.round(rnd(1,3)), 0, 4), // mayores
+        clamp(Math.round(rnd(5,10)), 2, 12) // menores
+      ];
+      kaseyaDonut.data.datasets[0].data = sev; kaseyaDonut.update('none');
+
+      $('#kaseya-updated').textContent = fmtTime();
+
+      // OPTISIGN
+      optScreens = clamp(optScreens + (Math.random()>.7? 1:0), 8, 10);
+      optMsgs = clamp(optMsgs + (Math.random()>.5? 1:-1), 10, 22);
+      optSync = clamp(optSync + (Math.random()>.5? 0:-1), 95, 100);
+
+      $('#opt-screens').textContent = Math.round(optScreens);
+      $('#opt-messages').textContent = Math.round(optMsgs);
+      $('#opt-sync').textContent = Math.round(optSync)+'%';
+      $('#optisign-updated').textContent = fmtTime();
+
+      optLine.data.datasets[0].data.shift();
+      optLine.data.datasets[0].data.push(clamp(95 + Math.round(rnd(0,5)), 92, 100));
+      optLine.update('none');
+
+      optBar.data.datasets[0].data = optBar.data.datasets[0].data.map(v=> clamp(v + Math.round(rnd(-30,30)), 200, 700));
+      optBar.update('none');
+
+      optDonut.data.datasets[0].data = optDonut.data.datasets[0].data.map((v,i)=> clamp(v + Math.round(rnd(-3,3)), i===3?4:10, i===1?40:60));
+      optDonut.update('none');
+
+      // NETWORK
+      netPhase = clamp(netPhase + (Math.random()>.6? 1:0), 52, 100);
+      netWifi = clamp(netWifi + (Math.random()>.5? 1:-1), 90, 100);
+      netNodes = clamp(netNodes + (Math.random()>.8? 1:0), 45, 80);
+      netUptime = clamp(netUptime + (Math.random()>.5? .1:-.1), 98.5, 99.9);
+
+      $('#net-phase').textContent = netPhase.toFixed(0)+'%';
+      $('#net-wifi').textContent = netWifi.toFixed(0)+'%';
+      $('#net-nodes').textContent = netNodes.toFixed(0);
+      $('#net-uptime').textContent = netUptime.toFixed(1)+'%';
+      $('#network-updated').textContent = fmtTime();
+
+      netLine.data.datasets[0].data = netLine.data.datasets[0].data.map(v=> clamp(v + rnd(-2,2), 8, 26));
+      netLine.update('none');
+
+      netBar.data.datasets[0].data = netBar.data.datasets[0].data.map(v=> clamp(v + rnd(-.8,.8), 1.2, 10.5));
+      netBar.update('none');
+
+      const links = [clamp(92 + Math.round(rnd(-3,3)),85,98), clamp(6 + Math.round(rnd(-2,2)),2,10), clamp(2 + Math.round(rnd(-1,1)),0,5)];
+      netDonut.data.datasets[0].data = links; netDonut.update('none');
+
+      // BACH RECORD
+      bachRecordDocs = clamp(bachRecordDocs + Math.floor(rnd(-10, 15)), 1200, 1300);
+      bachRecordEfficiency = clamp(bachRecordEfficiency + (Math.random() > 0.5 ? 0.1 : -0.1), 99.5, 100);
+      
+      // LIMS
+      limsSamples = clamp(limsSamples + Math.floor(rnd(-5, 8)), 90, 105);
+      limsEfficiency = clamp(limsEfficiency + (Math.random() > 0.5 ? 0.2 : -0.2), 97, 99.9);
+      
+      // INFRAESTRUCTURA
+      infraUptime = clamp(infraUptime + (Math.random() > 0.5 ? 0.05 : -0.05), 99.5, 100);
+      infraPerformance = clamp(infraPerformance + (Math.random() > 0.5 ? 1 : -1), 80, 95);
+      
+      // LABSOLUTIONS
+      labSolutionsSpeed = clamp(labSolutionsSpeed + (Math.random() > 0.5 ? 1 : -1), 55, 65);
+      labSolutionsPrecision = clamp(labSolutionsPrecision + (Math.random() > 0.5 ? 0.05 : -0.05), 99.8, 100);
+      
+      // IA
+      iaImplementation = clamp(iaImplementation + (Math.random() > 0.5 ? 0.5 : -0.5), 80, 90);
+      iaEfficiency = clamp(iaEfficiency + (Math.random() > 0.5 ? 1 : -1), 65, 75);
+
+      // BODEGA ESTRELLA
+      bodegaEstrellaCoverage = clamp(bodegaEstrellaCoverage + (Math.random() > 0.5 ? 0.1 : -0.1), 99.5, 100);
+      bodegaEstrellaEfficiency = clamp(bodegaEstrellaEfficiency + (Math.random() > 0.5 ? 0.5 : -0.5), 80, 90);
+
+      // Actualizar timestamps
+      $('#bach-record-updated').textContent = fmtTime();
+      $('#lims-updated').textContent = fmtTime();
+      $('#infraestructura-updated').textContent = fmtTime();
+      $('#labsolutions-updated').textContent = fmtTime();
+      $('#ia-updated').textContent = fmtTime();
+      $('#bodega-estrella-updated').textContent = fmtTime();
+    };
+    setInterval(tick, 2500);
+    tick();
+
+    // ------------------ Micro-UX: hover barras progreso ------------------
+    $$('.project-card').forEach(card=>{
+      const fill = $('.progress-fill', card);
+      if(!fill) return;
+      const orig = fill.style.width;
+      card.addEventListener('mouseenter', ()=>{ fill.style.transition='width .25s ease'; fill.style.width='calc('+orig+' + 6%)'; });
+      card.addEventListener('mouseleave', ()=>{ setTimeout(()=> fill.style.width=orig, 200); });
+    });
+
+    // ------------------ Inicialización de demos ------------------
+    // Activar el primer panel de demo por defecto
+    document.addEventListener('DOMContentLoaded', function() {
+      const firstDemoPanel = document.querySelector('.demo-panel');
+      const firstNavBtn = document.querySelector('.nav-btn');
+      if (firstDemoPanel && firstNavBtn) {
+        firstDemoPanel.classList.add('active');
+        firstNavBtn.classList.add('active');
+      }
+    });
+
+    // ------------------ Reemplazar logos fácil ------------------
+    // Para reemplazar el logo de Laproff:
+    // document.querySelector('.logo-svg').outerHTML = '<img class="logo-svg" src="logo-laproff.png" alt="Laproff" />';
+    
+    // Para reemplazar el logo de prototipado:
+    // document.querySelector('.prototype-logo svg').outerHTML = '<img src="logo-prototipado.png" alt="Prototipado" />';
+
+  </script>
+</body>
+</html>
+
