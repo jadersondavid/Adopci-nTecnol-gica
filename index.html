@@ -274,6 +274,7 @@
       justify-content: center;
       align-items: center;
     }
+    /* Estilos para logos SVG e imágenes */
     .logo-svg{
       width:128px;
       height:128px;
@@ -284,6 +285,31 @@
     .logo-svg:hover {
       transform: scale(1.05);
       filter: drop-shadow(0 8px 20px rgba(0,0,0,.35));
+    }
+    
+    /* Estilos específicos para SVGs inline */
+    .laproff-svg {
+      filter: drop-shadow(0 6px 14px rgba(0,151,166,0.3));
+    }
+    .prototype-svg {
+      filter: drop-shadow(0 6px 14px rgba(53,53,145,0.3));
+    }
+    
+    /* Estilos para imágenes de fallback */
+    .logo-img {
+      display: none;
+      filter: drop-shadow(0 6px 14px rgba(0,0,0,.25));
+      transition: var(--transition-smooth);
+    }
+    .logo-img:hover {
+      transform: scale(1.05);
+      filter: drop-shadow(0 8px 20px rgba(0,0,0,.35));
+    }
+    .logo-img.loaded {
+      display: block;
+    }
+    .logo-img.loaded + .logo-svg {
+      display: none;
     }
     .logo-title{
       font-weight:800;
@@ -2566,7 +2592,22 @@
       <!-- Logo Laproff (Izquierda) -->
       <div class="logo-section">
         <div class="logo-container" id="laproff-logo-container">
-          <img src="laproff.png" alt="Laproff logo" class="logo-svg" style="width: 128px; height: 128px; object-fit: contain;">
+          <!-- SVG inline como fallback principal -->
+          <svg class="logo-svg laproff-svg" width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="128" height="128" rx="16" fill="url(#laproff-gradient)"/>
+            <circle cx="64" cy="64" r="48" fill="white" opacity="0.9"/>
+            <text x="64" y="75" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#0097A6">LP</text>
+            <defs>
+              <linearGradient id="laproff-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#0097A6;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#00B7EE;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+          </svg>
+          
+          <!-- Imagen como fallback secundario -->
+          <img src="laproff.png" alt="Laproff logo" class="logo-img laproff-img" style="width: 128px; height: 128px; object-fit: contain; display: none;">
+          
           <input type="file" id="laproff-logo-input" accept="image/*" style="display: none;" onchange="changeLogo('laproff', this)">
           <button class="logo-upload-btn" onclick="document.getElementById('laproff-logo-input').click()" title="Cambiar logo Laproff">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -2590,7 +2631,22 @@
       <!-- Logo Prototipado (Derecha) -->
       <div class="prototype-logo" title="Prototipado Digital">
         <div class="logo-container" id="prototype-logo-container">
-          <img src="prototipado.webp" alt="Prototipado logo" style="width: 96px; height: 96px; object-fit: contain; border-radius: 8px;">
+          <!-- SVG inline como fallback principal -->
+          <svg class="logo-svg prototype-svg" width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="96" height="96" rx="12" fill="url(#prototype-gradient)"/>
+            <circle cx="48" cy="48" r="32" fill="white" opacity="0.9"/>
+            <path d="M32 48 L44 60 L64 36" stroke="#353591" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="prototype-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#353591;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#806CB0;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+          </svg>
+          
+          <!-- Imagen como fallback secundario -->
+          <img src="prototipado.webp" alt="Prototipado logo" class="logo-img prototype-img" style="width: 96px; height: 96px; object-fit: contain; border-radius: 8px; display: none;">
+          
           <input type="file" id="prototype-logo-input" accept="image/*" style="display: none;" onchange="changeLogo('prototype', this)">
           <button class="logo-upload-btn" onclick="document.getElementById('prototype-logo-input').click()" title="Cambiar logo Prototipado">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -3775,6 +3831,35 @@
       }
     });
     
+    // Función para detectar si las imágenes están disponibles
+    function checkImageAvailability() {
+      const images = [
+        { src: 'laproff.png', type: 'laproff' },
+        { src: 'prototipado.webp', type: 'prototype' }
+      ];
+      
+      images.forEach(img => {
+        const testImg = new Image();
+        testImg.onload = function() {
+          // Imagen disponible, mostrar imagen y ocultar SVG
+          const container = document.getElementById(`${img.type}-logo-container`);
+          const logoImg = container.querySelector(`.${img.type}-img`);
+          const logoSvg = container.querySelector(`.${img.type}-svg`);
+          
+          if (logoImg && logoSvg) {
+            logoImg.style.display = 'block';
+            logoSvg.style.display = 'none';
+            logoImg.classList.add('loaded');
+          }
+        };
+        testImg.onerror = function() {
+          // Imagen no disponible, mantener SVG visible
+          console.log(`Imagen ${img.src} no disponible, usando SVG fallback`);
+        };
+        testImg.src = img.src;
+      });
+    }
+
     // Función para cambiar logos
     function changeLogo(type, input) {
       const file = input.files[0];
@@ -3783,10 +3868,12 @@
         reader.onload = function(e) {
           const container = document.getElementById(`${type}-logo-container`);
           const svg = container.querySelector('svg');
+          const existingImg = container.querySelector('.logo-img');
           
           // Crear nueva imagen con mejor styling
           const img = document.createElement('img');
           img.src = e.target.result;
+          img.className = `logo-img ${type}-img`;
           img.style.cssText = `
             width: ${type === 'laproff' ? '128px' : '96px'};
             height: ${type === 'laproff' ? '128px' : '96px'};
@@ -3794,17 +3881,18 @@
             border-radius: ${type === 'laproff' ? '0' : '8px'};
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
             transition: all 0.3s ease;
+            display: block;
           `;
           
           // Remover imagen anterior si existe
-          const existingImg = container.querySelector('img');
           if (existingImg) {
             existingImg.remove();
           }
           
-          // Reemplazar SVG con imagen
+          // Ocultar SVG y mostrar nueva imagen
           svg.style.display = 'none';
           container.insertBefore(img, svg);
+          img.classList.add('loaded');
           
           // Mostrar notificación
           showNotification(`Logo ${type === 'laproff' ? 'Laproff' : 'Prototipado'} actualizado exitosamente`);
@@ -4269,6 +4357,9 @@
         firstDemoPanel.classList.add('active');
         firstNavBtn.classList.add('active');
       }
+      
+      // Verificar disponibilidad de imágenes de logos
+      checkImageAvailability();
     });
 
     // ------------------ Reemplazar logos fácil ------------------
