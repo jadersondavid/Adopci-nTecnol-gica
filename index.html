@@ -12,6 +12,7 @@
 
   <!-- =====================  CHARTS (CDN)  ===================== -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
 
   <!-- =====================  ESTILOS GLOBALES  ===================== -->
   <style>
@@ -98,6 +99,17 @@
         --safety-area-bottom: env(safe-area-inset-bottom, 24px);
         --safety-area-left: env(safe-area-inset-left, 0px);
         --safety-area-right: env(safe-area-inset-right, 0px);
+        
+        /* ECharts Dashboard Colors */
+        --echart-primary: #0097A6;
+        --echart-secondary: #00B7EE;
+        --echart-accent: #806CB0;
+        --echart-success: #9ECB3A;
+        --echart-warning: #FCB547;
+        --echart-danger: #F16688;
+        --echart-bg: rgba(255, 255, 255, 0.95);
+        --echart-grid: rgba(0, 151, 166, 0.1);
+        --echart-text: #1a202c;
         --controls-bg: rgba(0, 0, 0, 0.5);
         --controls-radius: 32px;
         --primary-color: var(--mud-palette-primary);
@@ -1457,6 +1469,129 @@
       font-size:.75rem; 
       border:1px solid hsl(var(--border));
       box-shadow: var(--shadow-card);
+    }
+
+    /* ===================== ECHARTS DASHBOARD STYLES ===================== */
+    .echart-container {
+      width: 100%;
+      height: 300px;
+      position: relative;
+      background: var(--echart-bg);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 151, 166, 0.15);
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .echart-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, 
+        rgba(0, 151, 166, 0.05) 0%, 
+        rgba(0, 183, 238, 0.03) 50%, 
+        rgba(128, 108, 176, 0.05) 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    .echart-container:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 151, 166, 0.25);
+    }
+    
+    .echart-container canvas {
+      border-radius: 16px;
+    }
+    
+    .dashboard-enhanced {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.95) 0%, 
+        rgba(248, 249, 250, 0.9) 100%);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 12px 40px rgba(0, 151, 166, 0.1);
+      border: 1px solid rgba(0, 151, 166, 0.1);
+      backdrop-filter: blur(10px);
+    }
+    
+    .kpi-enhanced {
+      background: linear-gradient(135deg, var(--echart-primary), var(--echart-secondary));
+      color: white;
+      padding: 20px;
+      border-radius: 16px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0, 151, 166, 0.3);
+      transition: all 0.4s ease;
+    }
+    
+    .kpi-enhanced::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+      animation: kpi-shine 3s ease-in-out infinite;
+    }
+    
+    .kpi-enhanced:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 12px 35px rgba(0, 151, 166, 0.4);
+    }
+    
+    .kpi-enhanced .value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .kpi-enhanced .label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      opacity: 0.9;
+    }
+    
+    @keyframes kpi-shine {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+      100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    }
+    
+    .chart-grid-enhanced {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+    
+    .chart-title-enhanced {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--echart-text);
+      margin-bottom: 16px;
+      text-align: center;
+      position: relative;
+      padding-bottom: 8px;
+    }
+    
+    .chart-title-enhanced::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--echart-primary), var(--echart-secondary));
+      border-radius: 2px;
     }
 
     /* =====================  FUTURO  ===================== */
@@ -3264,7 +3399,7 @@
       </div>
 
       <!-- ====== KASEYA ====== -->
-      <div id="kaseya-dashboard" class="dashboard active">
+      <div id="kaseya-dashboard" class="dashboard active dashboard-enhanced">
         <div class="dashboard-header">
           <div class="dashboard-title">
             Sistema Kaseya - Monitoreo 24/7
@@ -3274,36 +3409,36 @@
         </div>
 
         <div class="kpis">
-          <div class="kpi"><div class="value" id="kpi-uptime">98.7%</div><div class="label">Disponibilidad General</div></div>
-          <div class="kpi"><div class="value" id="kpi-connected">12</div><div class="label">Equipos Conectados</div></div>
-          <div class="kpi"><div class="value" id="kpi-critical">0</div><div class="label">Alertas Críticas</div></div>
-          <div class="kpi"><div class="value" id="kpi-hours">847</div><div class="label">Horas de Operación</div></div>
+          <div class="kpi-enhanced">
+            <div class="value" id="kpi-uptime">98.7%</div>
+            <div class="label">Disponibilidad General</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value" id="kpi-connected">12</div>
+            <div class="label">Equipos Conectados</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value" id="kpi-critical">0</div>
+            <div class="label">Alertas Críticas</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value" id="kpi-hours">847</div>
+            <div class="label">Horas de Operación</div>
+          </div>
         </div>
 
-        <div class="charts">
+        <div class="chart-grid-enhanced">
           <div class="chart-card">
-            <div class="demo-visual-element">📈</div>
-            <div class="demo-status-indicator"></div>
-            <div class="demo-data-flow">FLUJO</div>
-            <div class="demo-performance-bar"></div>
-            <div class="chart-title">Uptime (últimas 24h)</div>
-            <canvas id="chartKaseyaLine"></canvas>
+            <div class="chart-title-enhanced">Uptime en Tiempo Real (24h)</div>
+            <div id="kaseya-uptime-chart" class="echart-container"></div>
           </div>
           <div class="chart-card">
-            <div class="demo-visual-element">⚡</div>
-            <div class="demo-status-indicator"></div>
-            <div class="demo-data-flow">REND</div>
-            <div class="demo-performance-bar"></div>
-            <div class="chart-title">Rendimiento por Equipo (TPH)</div>
-            <canvas id="chartKaseyaBar"></canvas>
+            <div class="chart-title-enhanced">Rendimiento por Equipo (TPH)</div>
+            <div id="kaseya-performance-chart" class="echart-container"></div>
           </div>
           <div class="chart-card">
-            <div class="demo-visual-element">🚨</div>
-            <div class="demo-status-indicator"></div>
-            <div class="demo-data-flow">ALERT</div>
-            <div class="demo-performance-bar"></div>
-            <div class="chart-title">Alertas por Severidad</div>
-            <canvas id="chartKaseyaDonut"></canvas>
+            <div class="chart-title-enhanced">Alertas por Severidad</div>
+            <div id="kaseya-alerts-chart" class="echart-container"></div>
           </div>
         </div>
 
@@ -3317,7 +3452,7 @@
       </div>
 
       <!-- ====== OPTISIGN ====== -->
-      <div id="optisign-dashboard" class="dashboard">
+      <div id="optisign-dashboard" class="dashboard dashboard-enhanced">
         <div class="dashboard-header">
           <div class="dashboard-title">
             Red OptiSign - Comunicación Digital
@@ -3327,24 +3462,36 @@
         </div>
 
         <div class="kpis">
-          <div class="kpi"><div class="value" id="opt-screens">8</div><div class="label">Pantallas Activas</div></div>
-          <div class="kpi"><div class="value">24/7</div><div class="label">Tiempo de Emisión</div></div>
-          <div class="kpi"><div class="value" id="opt-messages">15</div><div class="label">Mensajes Diarios</div></div>
-          <div class="kpi"><div class="value" id="opt-sync">100%</div><div class="label">Sincronización</div></div>
+          <div class="kpi-enhanced">
+            <div class="value" id="opt-screens">8</div>
+            <div class="label">Pantallas Activas</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value">24/7</div>
+            <div class="label">Tiempo de Emisión</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value" id="opt-messages">15</div>
+            <div class="label">Mensajes Diarios</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value" id="opt-sync">100%</div>
+            <div class="label">Sincronización</div>
+          </div>
         </div>
 
-        <div class="charts">
+        <div class="chart-grid-enhanced">
           <div class="chart-card">
-            <div class="chart-title">Alcance por Zona</div>
-            <canvas id="chartOptBar"></canvas>
+            <div class="chart-title-enhanced">Alcance por Zona</div>
+            <div id="optisign-reach-chart" class="echart-container"></div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">Cumplimiento de Programación (7 días)</div>
-            <canvas id="chartOptLine"></canvas>
+            <div class="chart-title-enhanced">Cumplimiento de Programación (7 días)</div>
+            <div id="optisign-compliance-chart" class="echart-container"></div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">Tipos de Contenido Emitido</div>
-            <canvas id="chartOptDonut"></canvas>
+            <div class="chart-title-enhanced">Tipos de Contenido Emitido</div>
+            <div id="optisign-content-chart" class="echart-container"></div>
           </div>
         </div>
 
@@ -3358,7 +3505,7 @@
       </div>
 
       <!-- ====== NETWORK ====== -->
-      <div id="network-dashboard" class="dashboard">
+      <div id="network-dashboard" class="dashboard dashboard-enhanced">
         <div class="dashboard-header">
           <div class="dashboard-title">
             Infraestructura de Red - Estado General
@@ -3368,24 +3515,36 @@
         </div>
 
         <div class="kpis">
-          <div class="kpi"><div class="value" id="net-phase">52%</div><div class="label">Progreso Fase 2</div></div>
-          <div class="kpi"><div class="value" id="net-wifi">95%</div><div class="label">Cobertura Wi-Fi</div></div>
-          <div class="kpi"><div class="value" id="net-nodes">45</div><div class="label">Puntos de Red</div></div>
-          <div class="kpi"><div class="value" id="net-uptime">99.2%</div><div class="label">Uptime Actual</div></div>
+          <div class="kpi-enhanced">
+            <div class="value" id="net-phase">52%</div>
+            <div class="label">Progreso Fase 2</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value" id="net-wifi">95%</div>
+            <div class="label">Cobertura Wi-Fi</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value" id="net-nodes">45</div>
+            <div class="label">Puntos de Red</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value" id="net-uptime">99.2%</div>
+            <div class="label">Uptime Actual</div>
+          </div>
         </div>
 
-        <div class="charts">
+        <div class="chart-grid-enhanced">
           <div class="chart-card">
-            <div class="chart-title">Tráfico por Segmento (Gbps)</div>
-            <canvas id="chartNetBar"></canvas>
+            <div class="chart-title-enhanced">Tráfico por Segmento (Gbps)</div>
+            <div id="network-traffic-chart" class="echart-container"></div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">Latencia Promedio (ms)</div>
-            <canvas id="chartNetLine"></canvas>
+            <div class="chart-title-enhanced">Latencia Promedio (ms)</div>
+            <div id="network-latency-chart" class="echart-container"></div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">Estado de Enlaces</div>
-            <canvas id="chartNetDonut"></canvas>
+            <div class="chart-title-enhanced">Estado de Enlaces</div>
+            <div id="network-links-chart" class="echart-container"></div>
           </div>
         </div>
 
@@ -3399,7 +3558,7 @@
       </div>
 
       <!-- ====== BACH RECORD ====== -->
-      <div id="bach-record-dashboard" class="dashboard">
+      <div id="bach-record-dashboard" class="dashboard dashboard-enhanced">
         <div class="dashboard-header">
           <div class="dashboard-title">
             Bach Record Electrónico - Trazabilidad Digital
@@ -3409,24 +3568,36 @@
         </div>
 
         <div class="kpis">
-          <div class="kpi"><div class="value">100%</div><div class="label">Digitalizado</div></div>
-          <div class="kpi"><div class="value">24/7</div><div class="label">Disponible</div></div>
-          <div class="kpi"><div class="value">0</div><div class="label">Pérdidas</div></div>
-          <div class="kpi"><div class="value">+60%</div><div class="label">Eficiencia</div></div>
+          <div class="kpi-enhanced">
+            <div class="value">100%</div>
+            <div class="label">Digitalizado</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value">24/7</div>
+            <div class="label">Disponible</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value">0</div>
+            <div class="label">Pérdidas</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value">+60%</div>
+            <div class="label">Eficiencia</div>
+          </div>
         </div>
 
-        <div class="charts">
+        <div class="chart-grid-enhanced">
           <div class="chart-card">
-            <div class="chart-title">Documentos Procesados (últimos 30 días)</div>
-            <canvas id="chartBachRecordLine"></canvas>
+            <div class="chart-title-enhanced">Documentos Procesados (últimos 30 días)</div>
+            <div id="bach-record-docs-chart" class="echart-container"></div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">Tiempo de Procesamiento</div>
-            <canvas id="chartBachRecordBar"></canvas>
+            <div class="chart-title-enhanced">Tiempo de Procesamiento</div>
+            <div id="bach-record-time-chart" class="echart-container"></div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">Tipos de Documentos</div>
-            <canvas id="chartBachRecordDonut"></canvas>
+            <div class="chart-title-enhanced">Tipos de Documentos</div>
+            <div id="bach-record-types-chart" class="echart-container"></div>
           </div>
         </div>
 
@@ -3440,7 +3611,7 @@
       </div>
 
       <!-- ====== LIMS ====== -->
-      <div id="lims-dashboard" class="dashboard">
+      <div id="lims-dashboard" class="dashboard dashboard-enhanced">
         <div class="dashboard-header">
           <div class="dashboard-title">
             LIMS - Control de Calidad
@@ -3450,24 +3621,36 @@
         </div>
 
         <div class="kpis">
-          <div class="kpi"><div class="value">98.5%</div><div class="label">Eficiencia</div></div>
-          <div class="kpi"><div class="value">99.9%</div><div class="label">Precisión</div></div>
-          <div class="kpi"><div class="value">+45%</div><div class="label">Productividad</div></div>
-          <div class="kpi"><div class="value">0</div><div class="label">Errores</div></div>
+          <div class="kpi-enhanced">
+            <div class="value">98.5%</div>
+            <div class="label">Eficiencia</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value">99.9%</div>
+            <div class="label">Precisión</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value">+45%</div>
+            <div class="label">Productividad</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value">0</div>
+            <div class="label">Errores</div>
+          </div>
         </div>
 
-        <div class="charts">
+        <div class="chart-grid-enhanced">
           <div class="chart-card">
-            <div class="chart-title">Muestras Procesadas (últimas 24h)</div>
-            <canvas id="chartLimsLine"></canvas>
+            <div class="chart-title-enhanced">Muestras Procesadas (últimas 24h)</div>
+            <div id="lims-samples-chart" class="echart-container"></div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">Tiempo de Análisis</div>
-            <canvas id="chartLimsBar"></canvas>
+            <div class="chart-title-enhanced">Tiempo de Análisis</div>
+            <div id="lims-time-chart" class="echart-container"></div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">Tipos de Análisis</div>
-            <canvas id="chartLimsDonut"></canvas>
+            <div class="chart-title-enhanced">Tipos de Análisis</div>
+            <div id="lims-types-chart" class="echart-container"></div>
           </div>
         </div>
 
@@ -3481,7 +3664,7 @@
       </div>
 
       <!-- ====== INFRAESTRUCTURA ====== -->
-      <div id="infraestructura-dashboard" class="dashboard">
+      <div id="infraestructura-dashboard" class="dashboard dashboard-enhanced">
         <div class="dashboard-header">
           <div class="dashboard-title">
             Renovación de Infraestructura - Estado General
@@ -3491,24 +3674,36 @@
         </div>
 
         <div class="kpis">
-          <div class="kpi"><div class="value">99.9%</div><div class="label">Uptime</div></div>
-          <div class="kpi"><div class="value">1Gbps</div><div class="label">Velocidad Red</div></div>
-          <div class="kpi"><div class="value">24/7</div><div class="label">Monitoreo</div></div>
-          <div class="kpi"><div class="value">10TB</div><div class="label">Almacenamiento</div></div>
+          <div class="kpi-enhanced">
+            <div class="value">99.9%</div>
+            <div class="label">Uptime</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value">1Gbps</div>
+            <div class="label">Velocidad Red</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value">24/7</div>
+            <div class="label">Monitoreo</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value">10TB</div>
+            <div class="label">Almacenamiento</div>
+          </div>
         </div>
 
-        <div class="charts">
+        <div class="chart-grid-enhanced">
           <div class="chart-card">
-            <div class="chart-title">Rendimiento del Sistema</div>
-            <canvas id="chartInfraestructuraBar"></canvas>
+            <div class="chart-title-enhanced">Rendimiento del Sistema</div>
+            <div id="infraestructura-performance-chart" class="echart-container"></div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">Uso de Recursos</div>
-            <canvas id="chartInfraestructuraLine"></canvas>
+            <div class="chart-title-enhanced">Uso de Recursos</div>
+            <div id="infraestructura-resources-chart" class="echart-container"></div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">Estado de Componentes</div>
-            <canvas id="chartInfraestructuraDonut"></canvas>
+            <div class="chart-title-enhanced">Estado de Componentes</div>
+            <div id="infraestructura-components-chart" class="echart-container"></div>
           </div>
         </div>
 
@@ -3522,7 +3717,7 @@
       </div>
 
       <!-- ====== LABSOLUTIONS ====== -->
-      <div id="labsolutions-dashboard" class="dashboard">
+      <div id="labsolutions-dashboard" class="dashboard dashboard-enhanced">
         <div class="dashboard-header">
           <div class="dashboard-title">
             LabSolutions - Análisis Avanzado
@@ -3532,24 +3727,36 @@
         </div>
 
         <div class="kpis">
-          <div class="kpi"><div class="value">+60%</div><div class="label">Velocidad</div></div>
-          <div class="kpi"><div class="value">99.9%</div><div class="label">Precisión</div></div>
-          <div class="kpi"><div class="value">+40%</div><div class="label">Eficiencia</div></div>
-          <div class="kpi"><div class="value">24/7</div><div class="label">Disponibilidad</div></div>
+          <div class="kpi-enhanced">
+            <div class="value">+60%</div>
+            <div class="label">Velocidad</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value">99.9%</div>
+            <div class="label">Precisión</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value">+40%</div>
+            <div class="label">Eficiencia</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value">24/7</div>
+            <div class="label">Disponibilidad</div>
+          </div>
         </div>
 
-        <div class="charts">
+        <div class="chart-grid-enhanced">
           <div class="chart-card">
-            <div class="chart-title">Análisis Realizados (últimas 24h)</div>
-            <canvas id="chartLabSolutionsLine"></canvas>
+            <div class="chart-title-enhanced">Análisis Realizados (últimas 24h)</div>
+            <div id="labsolutions-analysis-chart" class="echart-container"></div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">Tiempo de Respuesta</div>
-            <canvas id="chartLabSolutionsBar"></canvas>
+            <div class="chart-title-enhanced">Tiempo de Respuesta</div>
+            <div id="labsolutions-response-chart" class="echart-container"></div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">Tipos de Análisis</div>
-            <canvas id="chartLabSolutionsDonut"></canvas>
+            <div class="chart-title-enhanced">Tipos de Análisis</div>
+            <div id="labsolutions-types-chart" class="echart-container"></div>
           </div>
         </div>
 
@@ -3563,7 +3770,7 @@
       </div>
 
       <!-- ====== IA ====== -->
-      <div id="ia-dashboard" class="dashboard">
+      <div id="ia-dashboard" class="dashboard dashboard-enhanced">
         <div class="dashboard-header">
           <div class="dashboard-title">
             Implementación de IA - Inteligencia Artificial
@@ -3573,24 +3780,36 @@
         </div>
 
         <div class="kpis">
-          <div class="kpi"><div class="value">85%</div><div class="label">Implementación</div></div>
-          <div class="kpi"><div class="value">+70%</div><div class="label">Eficiencia</div></div>
-          <div class="kpi"><div class="value">-50%</div><div class="label">Tiempo</div></div>
-          <div class="kpi"><div class="value">99%</div><div class="label">Precisión</div></div>
+          <div class="kpi-enhanced">
+            <div class="value">85%</div>
+            <div class="label">Implementación</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value">+70%</div>
+            <div class="label">Eficiencia</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value">-50%</div>
+            <div class="label">Tiempo</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value">99%</div>
+            <div class="label">Precisión</div>
+          </div>
         </div>
 
-        <div class="charts">
+        <div class="chart-grid-enhanced">
           <div class="chart-card">
-            <div class="chart-title">Procesos Automatizados</div>
-            <canvas id="chartIALine"></canvas>
+            <div class="chart-title-enhanced">Procesos Automatizados</div>
+            <div id="ia-automation-chart" class="echart-container"></div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">Análisis Predictivo</div>
-            <canvas id="chartIABar"></canvas>
+            <div class="chart-title-enhanced">Análisis Predictivo</div>
+            <div id="ia-predictive-chart" class="echart-container"></div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">Tipos de IA</div>
-            <canvas id="chartIADonut"></canvas>
+            <div class="chart-title-enhanced">Tipos de IA</div>
+            <div id="ia-types-chart" class="echart-container"></div>
           </div>
         </div>
 
@@ -3604,7 +3823,7 @@
       </div>
 
       <!-- ====== BODEGA ESTRELLA ====== -->
-      <div id="bodega-estrella-dashboard" class="dashboard">
+      <div id="bodega-estrella-dashboard" class="dashboard dashboard-enhanced">
         <div class="dashboard-header">
           <div class="dashboard-title">
             Bodega de la Estrella - Infraestructura Completa
@@ -3614,36 +3833,36 @@
         </div>
 
         <div class="kpis">
-          <div class="kpi"><div class="value">100%</div><div class="label">Cobertura</div></div>
-          <div class="kpi"><div class="value">+85%</div><div class="label">Eficiencia</div></div>
-          <div class="kpi"><div class="value">24/7</div><div class="label">Disponibilidad</div></div>
-          <div class="kpi"><div class="value">99.9%</div><div class="label">Uptime</div></div>
+          <div class="kpi-enhanced">
+            <div class="value">100%</div>
+            <div class="label">Cobertura</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value">+85%</div>
+            <div class="label">Eficiencia</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value">24/7</div>
+            <div class="label">Disponibilidad</div>
+          </div>
+          <div class="kpi-enhanced">
+            <div class="value">99.9%</div>
+            <div class="label">Uptime</div>
+          </div>
         </div>
 
-        <div class="charts">
+        <div class="chart-grid-enhanced">
           <div class="chart-card">
-            <div class="demo-visual-element">📊</div>
-            <div class="demo-status-indicator"></div>
-            <div class="demo-data-flow">RED</div>
-            <div class="demo-performance-bar"></div>
-            <div class="chart-title">Cobertura de Red</div>
-            <canvas id="chartBodegaEstrellaLine"></canvas>
+            <div class="chart-title-enhanced">Cobertura de Red</div>
+            <div id="bodega-estrella-coverage-chart" class="echart-container"></div>
           </div>
           <div class="chart-card">
-            <div class="demo-visual-element">🔗</div>
-            <div class="demo-status-indicator"></div>
-            <div class="demo-data-flow">EQUIP</div>
-            <div class="demo-performance-bar"></div>
-            <div class="chart-title">Equipos Conectados</div>
-            <canvas id="chartBodegaEstrellaBar"></canvas>
+            <div class="chart-title-enhanced">Equipos Conectados</div>
+            <div id="bodega-estrella-equipment-chart" class="echart-container"></div>
           </div>
           <div class="chart-card">
-            <div class="demo-visual-element">🏗️</div>
-            <div class="demo-status-indicator"></div>
-            <div class="demo-data-flow">INFRA</div>
-            <div class="demo-performance-bar"></div>
-            <div class="chart-title">Tipos de Infraestructura</div>
-            <canvas id="chartBodegaEstrellaDonut"></canvas>
+            <div class="chart-title-enhanced">Tipos de Infraestructura</div>
+            <div id="bodega-estrella-infrastructure-chart" class="echart-container"></div>
           </div>
         </div>
 
@@ -4006,223 +4225,525 @@
       compNaranja: '#FCB547'
     };
     
-    const mkLine = (id, labels, data, tension=.35)=> new Chart(id.getContext('2d'), {
-      type:'line',
-      data:{ 
-        labels, 
-        datasets:[{ 
-          data, 
-          fill:false, 
-          borderWidth:2, 
-          pointRadius:2,
-          borderColor: chartColors.primary,
-          backgroundColor: chartColors.primary,
-          pointBackgroundColor: chartColors.primary,
-          pointBorderColor: chartColors.primary
-        }]
-      },
-      options:{ 
-        responsive:true, 
-        plugins:{ 
-          legend:{display:false}, 
-          tooltip:{mode:'index', intersect:false}
+    // ===================== ECHARTS FUNCTIONS =====================
+    const createEChart = (elementId, option) => {
+      const chartDom = document.getElementById(elementId);
+      if (!chartDom) return null;
+      const myChart = echarts.init(chartDom);
+      myChart.setOption(option);
+      return myChart;
+    };
+
+    const mkEChartLine = (elementId, labels, data, title = '', smooth = true) => {
+      const option = {
+        title: {
+          text: title,
+          left: 'center',
+          textStyle: {
+            color: '#1a202c',
+            fontSize: 14,
+            fontWeight: 'bold'
+          }
         },
-        elements:{ line:{ tension }}, 
-        scales:{ 
-          x:{ 
-            grid:{ color:'hsl(var(--foreground) / 0.1)' },
-            ticks: { color: 'hsl(var(--foreground))' }
-          }, 
-          y:{ 
-            grid:{ color:'hsl(var(--foreground) / 0.1)' },
-            ticks: { color: 'hsl(var(--foreground))' }
-          } 
-        } 
-      }
-    });
-    const mkBar = (id, labels, data)=> new Chart(id.getContext('2d'), {
-      type:'bar',
-      data:{ 
-        labels, 
-        datasets:[{ 
-          data, 
-          borderWidth:0,
-          backgroundColor: chartColors.primary,
-          borderColor: chartColors.primary
-        }] 
-      },
-      options:{ 
-        responsive:true, 
-        plugins:{ legend:{display:false} },
-        scales:{ 
-          x:{ 
-            grid:{ display:false },
-            ticks: { color: 'hsl(var(--foreground))' }
-          }, 
-          y:{ 
-            grid:{ color:'hsl(var(--foreground) / 0.1)' },
-            ticks: { color: 'hsl(var(--foreground))' }
-          } 
-        } 
-      }
-    });
-    const mkDonut = (id, labels, data)=> new Chart(id.getContext('2d'), {
-      type:'doughnut',
-      data:{ 
-        labels, 
-        datasets:[{ 
-          data, 
-          borderWidth:0,
-          backgroundColor: [chartColors.primary, chartColors.secondary, chartColors.accent, chartColors.success, chartColors.warning, chartColors.compAzul, chartColors.compVioleta, chartColors.compNaranja],
-          borderColor: [chartColors.primary, chartColors.secondary, chartColors.accent, chartColors.success, chartColors.warning, chartColors.compAzul, chartColors.compVioleta, chartColors.compNaranja]
-        }] 
-      },
-      options:{ 
-        responsive:true, 
-        plugins:{ 
-          legend:{
-            position:'bottom',
-            labels: {
-              color: 'hsl(var(--foreground))',
-              padding: 10,
-              usePointStyle: true
+        tooltip: {
+          trigger: 'axis',
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          borderColor: '#0097A6',
+          borderWidth: 1,
+          textStyle: {
+            color: '#1a202c'
+          },
+          formatter: function(params) {
+            return `${params[0].name}<br/>${params[0].seriesName}: ${params[0].value}`;
+          }
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '15%',
+          top: '15%',
+          containLabel: true
+        },
+        xAxis: {
+          type: 'category',
+          data: labels,
+          axisLine: {
+            lineStyle: {
+              color: '#0097A6'
             }
-          } 
-        }, 
-        cutout:'62%' 
-      }
-    });
+          },
+          axisLabel: {
+            color: '#1a202c',
+            fontSize: 11
+          }
+        },
+        yAxis: {
+          type: 'value',
+          axisLine: {
+            lineStyle: {
+              color: '#0097A6'
+            }
+          },
+          axisLabel: {
+            color: '#1a202c',
+            fontSize: 11
+          },
+          splitLine: {
+            lineStyle: {
+              color: 'rgba(0, 151, 166, 0.1)'
+            }
+          }
+        },
+        series: [{
+          name: title,
+          type: 'line',
+          data: data,
+          smooth: smooth,
+          symbol: 'circle',
+          symbolSize: 6,
+          lineStyle: {
+            color: '#0097A6',
+            width: 3
+          },
+          itemStyle: {
+            color: '#0097A6',
+            borderColor: '#ffffff',
+            borderWidth: 2
+          },
+          areaStyle: {
+            color: {
+              type: 'linear',
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [{
+                offset: 0, color: 'rgba(0, 151, 166, 0.3)'
+              }, {
+                offset: 1, color: 'rgba(0, 151, 166, 0.05)'
+              }]
+            }
+          },
+          emphasis: {
+            itemStyle: {
+              color: '#00B7EE',
+              borderColor: '#ffffff',
+              borderWidth: 3,
+              shadowBlur: 10,
+              shadowColor: 'rgba(0, 151, 166, 0.5)'
+            }
+          }
+        }]
+      };
+      return createEChart(elementId, option);
+    };
+
+    const mkEChartBar = (elementId, labels, data, title = '') => {
+      const option = {
+        title: {
+          text: title,
+          left: 'center',
+          textStyle: {
+            color: '#1a202c',
+            fontSize: 14,
+            fontWeight: 'bold'
+          }
+        },
+        tooltip: {
+          trigger: 'axis',
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          borderColor: '#0097A6',
+          borderWidth: 1,
+          textStyle: {
+            color: '#1a202c'
+          }
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '15%',
+          top: '15%',
+          containLabel: true
+        },
+        xAxis: {
+          type: 'category',
+          data: labels,
+          axisLine: {
+            lineStyle: {
+              color: '#0097A6'
+            }
+          },
+          axisLabel: {
+            color: '#1a202c',
+            fontSize: 11,
+            rotate: 45
+          }
+        },
+        yAxis: {
+          type: 'value',
+          axisLine: {
+            lineStyle: {
+              color: '#0097A6'
+            }
+          },
+          axisLabel: {
+            color: '#1a202c',
+            fontSize: 11
+          },
+          splitLine: {
+            lineStyle: {
+              color: 'rgba(0, 151, 166, 0.1)'
+            }
+          }
+        },
+        series: [{
+          name: title,
+          type: 'bar',
+          data: data,
+          itemStyle: {
+            color: {
+              type: 'linear',
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [{
+                offset: 0, color: '#0097A6'
+              }, {
+                offset: 1, color: '#00B7EE'
+              }]
+            },
+            borderRadius: [4, 4, 0, 0]
+          },
+          emphasis: {
+            itemStyle: {
+              color: {
+                type: 'linear',
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [{
+                  offset: 0, color: '#00B7EE'
+                }, {
+                  offset: 1, color: '#806CB0'
+                }]
+              },
+              shadowBlur: 10,
+              shadowColor: 'rgba(0, 151, 166, 0.5)'
+            }
+          }
+        }]
+      };
+      return createEChart(elementId, option);
+    };
+
+    const mkEChartDonut = (elementId, labels, data, title = '') => {
+      const colors = ['#0097A6', '#00B7EE', '#806CB0', '#9ECB3A', '#FCB547', '#F16688', '#AFDBDE', '#353591'];
+      const option = {
+        title: {
+          text: title,
+          left: 'center',
+          textStyle: {
+            color: '#1a202c',
+            fontSize: 14,
+            fontWeight: 'bold'
+          }
+        },
+        tooltip: {
+          trigger: 'item',
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          borderColor: '#0097A6',
+          borderWidth: 1,
+          textStyle: {
+            color: '#1a202c'
+          },
+          formatter: '{a} <br/>{b}: {c} ({d}%)'
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left',
+          textStyle: {
+            color: '#1a202c',
+            fontSize: 11
+          }
+        },
+        series: [{
+          name: title,
+          type: 'pie',
+          radius: ['40%', '70%'],
+          center: ['60%', '50%'],
+          data: labels.map((label, index) => ({
+            value: data[index],
+            name: label
+          })),
+          itemStyle: {
+            borderRadius: 6,
+            borderColor: '#ffffff',
+            borderWidth: 2
+          },
+          label: {
+            show: false
+          },
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }]
+      };
+      return createEChart(elementId, option);
+    };
+
+    const mkEChartGauge = (elementId, value, title = '', max = 100) => {
+      const option = {
+        title: {
+          text: title,
+          left: 'center',
+          textStyle: {
+            color: '#1a202c',
+            fontSize: 14,
+            fontWeight: 'bold'
+          }
+        },
+        series: [{
+          name: title,
+          type: 'gauge',
+          min: 0,
+          max: max,
+          detail: {
+            formatter: '{value}%',
+            fontSize: 20,
+            color: '#1a202c'
+          },
+          data: [{
+            value: value,
+            name: title
+          }],
+          axisLine: {
+            lineStyle: {
+              width: 30,
+              color: [
+                [0.3, '#F16688'],
+                [0.7, '#FCB547'],
+                [1, '#9ECB3A']
+              ]
+            }
+          },
+          pointer: {
+            itemStyle: {
+              color: '#0097A6'
+            }
+          },
+          axisTick: {
+            distance: -45,
+            length: 8,
+            lineStyle: {
+              color: '#fff',
+              width: 2
+            }
+          },
+          splitLine: {
+            distance: -52,
+            length: 14,
+            lineStyle: {
+              color: '#fff',
+              width: 3
+            }
+          },
+          axisLabel: {
+            color: '#1a202c',
+            distance: 20,
+            fontSize: 12
+          }
+        }]
+      };
+      return createEChart(elementId, option);
+    };
 
     // ------------------ KASEYA CHARTS ------------------
-    const kaseyaLine = mkLine($('#chartKaseyaLine'),
+    const kaseyaUptimeChart = mkEChartLine('kaseya-uptime-chart',
       Array.from({length:12}, (_,i)=> `${i*2}h`),
-      [99.2,99.0,98.7,99.1,99.0,98.9,99.3,99.1,98.8,99.2,98.9,99.1]
+      [99.2,99.0,98.7,99.1,99.0,98.9,99.3,99.1,98.8,99.2,98.9,99.1],
+      'Uptime en Tiempo Real'
     );
-    const kaseyaBar = mkBar($('#chartKaseyaBar'),
+    const kaseyaPerformanceChart = mkEChartBar('kaseya-performance-chart',
       ['Prexima','Kilian','Essica 1','Glatt'],
-      [120, 105, 98, 112]
+      [120, 105, 98, 112],
+      'Rendimiento por Equipo'
     );
-    const kaseyaDonut = mkDonut($('#chartKaseyaDonut'),
+    const kaseyaAlertsChart = mkEChartDonut('kaseya-alerts-chart',
       ['Críticas','Mayores','Menores'],
-      [0, 2, 8]
+      [0, 2, 8],
+      'Alertas por Severidad'
     );
 
     // ------------------ OPTISIGN CHARTS ------------------
-    const optBar = mkBar($('#chartOptBar'),
+    const optisignReachChart = mkEChartBar('optisign-reach-chart',
       ['Lobby','Producción','Cafetería','Control'],
-      [320, 560, 280, 410]
+      [320, 560, 280, 410],
+      'Alcance por Zona'
     );
-    const optLine = mkLine($('#chartOptLine'),
+    const optisignComplianceChart = mkEChartLine('optisign-compliance-chart',
       ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'],
-      [98, 96, 99, 97, 100, 99, 98], .3
+      [98, 96, 99, 97, 100, 99, 98],
+      'Cumplimiento de Programación'
     );
-    const optDonut = mkDonut($('#chartOptDonut'),
+    const optisignContentChart = mkEChartDonut('optisign-content-chart',
       ['Anuncios','KPI','Cultura','Alertas'],
-      [45, 30, 18, 7]
+      [45, 30, 18, 7],
+      'Tipos de Contenido'
     );
 
     // ------------------ NETWORK CHARTS ------------------
-    const netBar = mkBar($('#chartNetBar'),
+    const networkTrafficChart = mkEChartBar('network-traffic-chart',
       ['Core','DMZ','Prod','Admin','Bodega'],
-      [8.2, 4.7, 6.5, 3.1, 2.8]
+      [8.2, 4.7, 6.5, 3.1, 2.8],
+      'Tráfico por Segmento'
     );
-    const netLine = mkLine($('#chartNetLine'),
+    const networkLatencyChart = mkEChartLine('network-latency-chart',
       ['00h','04h','08h','12h','16h','20h'],
-      [12, 14, 18, 22, 16, 13], .25
+      [12, 14, 18, 22, 16, 13],
+      'Latencia Promedio'
     );
-    const netDonut = mkDonut($('#chartNetDonut'),
-      ['Up','Degradado','Down'],
-      [92, 6, 2]
+    const networkLinksChart = mkEChartDonut('network-links-chart',
+      ['Activos','Mantenimiento','Críticos'],
+      [85, 10, 5],
+      'Estado de Enlaces'
     );
 
     // ------------------ BACH RECORD CHARTS ------------------
-    const bachRecordLine = mkLine($('#chartBachRecordLine'),
+    const bachRecordDocsChart = mkEChartLine('bach-record-docs-chart',
       Array.from({length:30}, (_,i)=> `${i+1}`),
-      Array.from({length:30}, (_,i)=> Math.floor(Math.random() * 50) + 100)
+      Array.from({length:30}, (_,i)=> Math.floor(Math.random() * 50) + 100),
+      'Documentos Procesados'
     );
-    const bachRecordBar = mkBar($('#chartBachRecordBar'),
+    const bachRecordTimeChart = mkEChartBar('bach-record-time-chart',
       ['Creación','Validación','Almacenamiento','Trazabilidad'],
-      [2.3, 1.8, 0.5, 0.2]
+      [2.3, 1.8, 0.5, 0.2],
+      'Tiempo de Procesamiento'
     );
-    const bachRecordDonut = mkDonut($('#chartBachRecordDonut'),
+    const bachRecordTypesChart = mkEChartDonut('bach-record-types-chart',
       ['Certificados','Reportes','Protocolos','Otros'],
-      [45, 30, 20, 5]
+      [45, 30, 20, 5],
+      'Tipos de Documentos'
     );
 
     // ------------------ LIMS CHARTS ------------------
-    const limsLine = mkLine($('#chartLimsLine'),
+    const limsSamplesChart = mkEChartLine('lims-samples-chart',
       Array.from({length:24}, (_,i)=> `${i}h`),
-      Array.from({length:24}, (_,i)=> Math.floor(Math.random() * 20) + 80)
+      Array.from({length:24}, (_,i)=> Math.floor(Math.random() * 20) + 80),
+      'Muestras Procesadas'
     );
-    const limsBar = mkBar($('#chartLimsBar'),
+    const limsTimeChart = mkEChartBar('lims-time-chart',
       ['Recepción','Análisis','Validación','Reporte'],
-      [15, 45, 25, 5]
+      [15, 45, 25, 5],
+      'Tiempo de Análisis'
     );
-    const limsDonut = mkDonut($('#chartLimsDonut'),
+    const limsTypesChart = mkEChartDonut('lims-types-chart',
       ['Químico','Microbiológico','Físico','Otros'],
-      [40, 35, 20, 5]
+      [40, 35, 20, 5],
+      'Tipos de Análisis'
     );
 
     // ------------------ INFRAESTRUCTURA CHARTS ------------------
-    const infraestructuraBar = mkBar($('#chartInfraestructuraBar'),
+    const infraestructuraPerformanceChart = mkEChartBar('infraestructura-performance-chart',
       ['CPU','RAM','Disco','Red'],
-      [85, 92, 78, 95]
+      [85, 92, 78, 95],
+      'Rendimiento del Sistema'
     );
-    const infraestructuraLine = mkLine($('#chartInfraestructuraLine'),
+    const infraestructuraResourcesChart = mkEChartLine('infraestructura-resources-chart',
       ['00h','06h','12h','18h','24h'],
-      [75, 82, 88, 85, 80], .3
+      [75, 82, 88, 85, 80],
+      'Uso de Recursos'
     );
-    const infraestructuraDonut = mkDonut($('#chartInfraestructuraDonut'),
+    const infraestructuraComponentsChart = mkEChartDonut('infraestructura-components-chart',
       ['Operativo','Mantenimiento','Crítico'],
-      [85, 12, 3]
+      [85, 12, 3],
+      'Estado de Componentes'
     );
 
     // ------------------ LABSOLUTIONS CHARTS ------------------
-    const labSolutionsLine = mkLine($('#chartLabSolutionsLine'),
+    const labSolutionsAnalysisChart = mkEChartLine('labsolutions-analysis-chart',
       Array.from({length:24}, (_,i)=> `${i}h`),
-      Array.from({length:24}, (_,i)=> Math.floor(Math.random() * 30) + 50)
+      Array.from({length:24}, (_,i)=> Math.floor(Math.random() * 30) + 50),
+      'Análisis Realizados'
     );
-    const labSolutionsBar = mkBar($('#chartLabSolutionsBar'),
+    const labSolutionsResponseChart = mkEChartBar('labsolutions-response-chart',
       ['Análisis','Reportes','Configuración','Integración'],
-      [1.2, 0.8, 2.1, 0.5]
+      [1.2, 0.8, 2.1, 0.5],
+      'Tiempo de Respuesta'
     );
-    const labSolutionsDonut = mkDonut($('#chartLabSolutionsDonut'),
+    const labSolutionsTypesChart = mkEChartDonut('labsolutions-types-chart',
       ['Químico','Biológico','Físico','Estadístico'],
-      [35, 30, 25, 10]
+      [35, 30, 25, 10],
+      'Tipos de Análisis'
     );
 
     // ------------------ IA CHARTS ------------------
-    const iaLine = mkLine($('#chartIALine'),
+    const iaAutomationChart = mkEChartLine('ia-automation-chart',
       ['Ene','Feb','Mar','Abr','May','Jun'],
-      [65, 72, 78, 82, 85, 87]
+      [65, 72, 78, 82, 85, 87],
+      'Procesos Automatizados'
     );
-    const iaBar = mkBar($('#chartIABar'),
+    const iaPredictiveChart = mkEChartBar('ia-predictive-chart',
       ['Predicción','Automatización','Optimización','ML'],
-      [92, 88, 95, 78]
+      [92, 88, 95, 78],
+      'Análisis Predictivo'
     );
-    const iaDonut = mkDonut($('#chartIADonut'),
+    const iaTypesChart = mkEChartDonut('ia-types-chart',
       ['Análisis','Automatización','Predicción','Otros'],
-      [40, 35, 20, 5]
+      [40, 35, 20, 5],
+      'Tipos de IA'
     );
 
     // Charts para Bodega Estrella
-    const bodegaEstrellaLine = mkLine($('#chartBodegaEstrellaLine'),
+    const bodegaEstrellaCoverageChart = mkEChartLine('bodega-estrella-coverage-chart',
       ['Ene','Feb','Mar','Abr','May','Jun'],
-      [85, 90, 95, 98, 100, 100]
+      [85, 90, 95, 98, 100, 100],
+      'Cobertura de Red'
     );
-    const bodegaEstrellaBar = mkBar($('#chartBodegaEstrellaBar'),
+    const bodegaEstrellaEquipmentChart = mkEChartBar('bodega-estrella-equipment-chart',
       ['Wi-Fi','Switches','Seguridad','Monitoreo'],
-      [100, 100, 100, 100]
+      [100, 100, 100, 100],
+      'Equipos Conectados'
     );
-    const bodegaEstrellaDonut = mkDonut($('#chartBodegaEstrellaDonut'),
+    const bodegaEstrellaInfrastructureChart = mkEChartDonut('bodega-estrella-infrastructure-chart',
       ['Red Industrial','Equipos','Seguridad','Otros'],
-      [45, 35, 15, 5]
+      [45, 35, 15, 5],
+      'Tipos de Infraestructura'
     );
 
     // ------------------ Simulación de datos en tiempo real ------------------
     let eqConnected = 12, uptime = 98.7, hours = 847, critical=0;
     let optScreens=8, optMsgs=15, optSync=100;
     let netPhase=52, netWifi=95, netNodes=45, netUptime=99.2;
+    
+    // Función para redimensionar todos los gráficos ECharts
+    const resizeAllCharts = () => {
+      const charts = [
+        kaseyaUptimeChart, kaseyaPerformanceChart, kaseyaAlertsChart,
+        optisignReachChart, optisignComplianceChart, optisignContentChart,
+        networkTrafficChart, networkLatencyChart, networkLinksChart,
+        bachRecordDocsChart, bachRecordTimeChart, bachRecordTypesChart,
+        limsSamplesChart, limsTimeChart, limsTypesChart,
+        infraestructuraPerformanceChart, infraestructuraResourcesChart, infraestructuraComponentsChart,
+        labSolutionsAnalysisChart, labSolutionsResponseChart, labSolutionsTypesChart,
+        iaAutomationChart, iaPredictiveChart, iaTypesChart,
+        bodegaEstrellaCoverageChart, bodegaEstrellaEquipmentChart, bodegaEstrellaInfrastructureChart
+      ];
+      
+      charts.forEach(chart => {
+        if (chart && chart.resize) {
+          chart.resize();
+        }
+      });
+    };
+    
+    // Event listener para redimensionamiento
+    window.addEventListener('resize', resizeAllCharts);
     
     // Variables para nuevos dashboards
     let bachRecordDocs = 1250, bachRecordEfficiency = 100;
